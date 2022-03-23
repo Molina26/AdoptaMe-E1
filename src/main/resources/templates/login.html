@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="../static/css/login.css">
-    <link rel="stylesheet" type="text/css" href="login-perro.css">
-    <link rel="stylesheet" type="text/css" href="ball.css">
+    
 </head>
 
 <body>
@@ -17,7 +16,23 @@
         <div class="form-container sign-up-container">
             <form action="#">
                 <h1 class="h1sing">Crear Cuenta</h1>
-                <input type="text" name="username" placeholder="Usuario" />
+                <input type="text" name="name" placeholder="Nombre" />
+                <input type="text" name="first_lastname" placeholder="Primer apellido" />
+                <input type="text" name="second_lastname" placeholder="Segundo apellido" />
+                <div class="row">
+                    <div class="col">
+                        <input type="text" name="username" placeholder="Usuario"/>
+                    </div>
+                    
+                         <select name="rol">
+                            <option value="">Selecciona</option>
+                        </select>
+                   
+                       
+                   
+
+                </div>
+
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Contraseña" />
                 <input type="password" name="password" placeholder="Confirmar Contraseña" />
@@ -94,13 +109,12 @@
                     <!--Campos del formulario-->
                     <div class="login">
                         <label>
-                            <div class="fa fa-phone"></div>
-                            <input class="username" type="text" name="username" autocomplete="on" placeholder="Usuario" />
+                            <input class="username" type="text" name="username" autocomplete="on"
+                                placeholder="Usuario" />
                         </label>
                         <label>
-                            <div class="fa fa-commenting"></div>
-                            <input class="password" type="password" name="password" autocomplete="off" placeholder="Contraseña" />
-
+                            <input class="password" type="password" name="password" autocomplete="off"
+                                placeholder="Contraseña" />
                         </label>
                         <br>
                         <div>
@@ -169,7 +183,7 @@
     </footer>
 
     <script type="text/javascript" src="../static/js/login.js"></script>
-    <script type="text/javascript" src="login-perro.js"></script>
+
 </body>
 
 </html>
