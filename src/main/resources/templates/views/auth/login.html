@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/login.css">
-    
-</head>
+    <header th:insert="~{fragments/head :: head}">
+
+    </header>
 
 <body>
+    <input type="hidden" th:value="${login}">
+    <div th:insert="~{fragments/infoToast :: infoToast}">
+    </div>
 
+    <div th:replace="~{fragments/navigation :: navigation}">
+
+    </div>
+
+    <main>
     <div class="container" id="container">
         <!--Formulario de registro-->
         <div class="form-container sign-up-container">
@@ -41,7 +45,7 @@
         </div>
         <!--Inicio de sesion perro-->
         <div class="form-container sign-in-container">
-            <form action="#">
+            <form th:action="@{/login}" method="post">
                 <div class="center">
                     <div class="ear ear--left"></div>
                     <div class="ear ear--right"></div>
@@ -177,10 +181,8 @@
             </div>
         </div>
     </div>
-
-    <footer>
-
-    </footer>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
     <script type="text/javascript" src="../static/js/login.js"></script>
 

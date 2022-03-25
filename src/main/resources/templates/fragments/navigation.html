@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-info" th:fragment="navigation">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" th:href="@{/}">AdoptaMe</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" th:href="@{/}">Inicio</a>
+                    </li>
+                    <div sec:authorize="!isAuthenticated() || hasRole('ROLE_ADOPTADOR')" class="d-flex">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#">Perros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#">Gatos</a>
+                        </li>
+                    </div>
+                    <div sec:authorize="isAuthenticated() && !hasRole('ROLE_ADOPTADOR')">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" th:href="@{/pets/management_list}">Mascotas</a>
+                        </li>
+                    </div>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Noticias</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-success" th:href="@{/login}" >Iniciar Sesión</a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()" class="d-flex">
+                        <p class="text-white px-2 my-0 d-flex align-items-center" sec:authentication="name"></p>&nbsp
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+
+</html>
