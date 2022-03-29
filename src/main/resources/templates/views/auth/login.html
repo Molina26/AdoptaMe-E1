@@ -27,16 +27,10 @@
                     <div class="col">
                         <input type="text" name="username" placeholder="Usuario"/>
                     </div>
-                    
                          <select name="rol">
                             <option value="">Selecciona</option>
                         </select>
-                   
-                       
-                   
-
                 </div>
-
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Contraseña" />
                 <input type="password" name="password" placeholder="Confirmar Contraseña" />
@@ -46,7 +40,6 @@
         <!--Inicio de sesion perro-->
         <div class="form-container sign-in-container">
             <form th:action="@{/login}" method="post">
-                <div class="center">
                     <div class="ear ear--left"></div>
                     <div class="ear ear--right"></div>
                     <div class="face">
@@ -125,7 +118,6 @@
                             <button>Entrar</button>
                         </div>
                     </div>
-                </div>
             </form>
         </div>
         <!--lado perro pelota-->
@@ -173,7 +165,7 @@
                 </div>
                 <!--lado logo-->
                 <div class="overlay-panel overlay-right">
-                    <img src="../static/images/logo.png" class="panel-logo">
+                    <img th:src="@{/images/logo.png}" class="panel-logo">
                     <h1 class="h1sing">¡Hola, Amigo!</h1>
                     <p>¿Aún no tienes cuenta? Crea una para no perderte de nada</p>
                     <button class="ghost" id="signUp">Registrarse</button>
