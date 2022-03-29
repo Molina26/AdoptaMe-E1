@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:insert="~{fragments/head :: head}">
-
-
-</header>
+<header th:insert="~{fragments/head :: head}"></header>
 <body>
     <div th:insert="~{fragments/infoToast :: infoToast}"></div>
     <div th:replace="~{fragments/navigation :: navigation}"></div>
@@ -25,7 +22,7 @@
         <!-- Card-------------- -->
 
         <div class="card" >
-            <form>
+            <form th:action="@{/blog/save}" method="post" th:object="${blog}" enctype="multipart/form-data">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -37,7 +34,7 @@
 
                             <div class="col-12 mt-2">
                                 <label for="title" class="form-label">Titulo del Blog</label>
-                                <input type="text" class="form-control" name="title" id="title" placeholder="Titulo del Blog">
+                                <input type="text" class="form-control" name="title" id="title" th:value="${blog.title}" placeholder="Titulo del Blog">
                             </div>
 
                             <div class="col-12 mt-2">
@@ -46,24 +43,21 @@
                                 </div>
 
                                 <div class="col-lg-12 mt-2">
-                                    <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal1">
+                                    <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal1" th:field="*{isPrincipal}" th:value="true"  />
                                     <label class="form-check-label me-2 " for="isPrincipal1">Si</label>
 
-                                    <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal2">
+                                    <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal2"  th:field="*{isPrincipal}"  th:value="false" />
                                     <label class="form-check-label" for="isPrincipal2">No</label>
                                  </div>
                             </div>
                             <div class="col-12 mt-2">
                                 <label for="image" class="form-label">Imagen</label>
-                                <input type="file" class="form-control" name="image" id="image" >
+                                <input type="file" class="form-control" name="image" id="image"/>
                             </div>
                             <div class="col-12 mt-2">
-                                <label for="contentBlog" class="form-label">Contenido</label>
-                                <textarea id="contentBlog" name="contentBlog"></textarea>
-
+                                <label for="content" class="form-label">Contenido</label>
+                                <textarea id="content" name="content" th:value="${blog.content}"></textarea>
                             </div>
-
-
                     </div>
                 </div>
                 <div class="card-footer">
