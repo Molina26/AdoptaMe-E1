@@ -26,7 +26,7 @@ public class BlogController {
     @GetMapping("")
     public String findAllBlog(Model model){
         model.addAttribute("listBlog", blogServiceImpl.findAllBlog());
-        return  "";
+        return  "views/auth/blog/blogList";
     }
 
 
@@ -41,6 +41,14 @@ public class BlogController {
     public String findBlogById(@PathVariable("id") Long id, Model model){
        model.addAttribute("blog",  blogServiceImpl.findBlogById(id));
         return "";
+    }
+
+
+    @Secured({"ROLE_ADMINISTRADOR"})
+    @GetMapping("/created")
+    public String createdBlog(Blog blog, Model model){
+
+        return "views/auth/blog/blogForm";
     }
 
     @Secured({"ROLE_ADMINISTRADOR"})
