@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
 
-    <link rel="stylesheet" th:href="@{/css/email.css}">
-    <link rel="stylesheet" th:href="@{/css/login-dog.css}">
+    <link th:if="${email != null && email == true}" rel="stylesheet" th:href="@{/css/email.css}">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" th:href="@{/images/logo.ico}" type="image/x-icon">
     <link th:if="${login != null && login == true}" rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+    <link th:if="${login != null && login == true}" rel="stylesheet" th:href="@{/css/login-dog.css}">
     <title>AdoptaMe</title>
 </header>
 
