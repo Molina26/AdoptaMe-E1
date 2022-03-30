@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<header th:insert="~{fragments/head :: head}">
+
+</header>
+
+<body>
+    <input type="hidden" th:value="${login}">
+    <div th:insert="~{fragments/infoToast :: infoToast}">
+    </div>
+
+    <div th:replace="~{fragments/navigation :: navigation}">
+
+    </div>
+
+    <main>
+        <table class="contenedor">
+            <tr>
+                <td>
+                    <table class="contenedortam">
+
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="contenedorInt">
+                        <tr>
+                            <td class="margen">
+                                <img th:src="@{/images/logo.png}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                <div class="contenedorImg">
+                                    <img th:src="@{/images/hueso.png}">
+                                    <div class="centrado">
+                                        <h1>Hola&nbspUsuario</h1>
+                                    </div>
+                                </div>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img th:src="@{/images/password.svg}">
+                                <p>
+                                    Recibimos tu solicitud para cambiar tu contraseña, en caso de no haber realizado
+                                    la solicitud por favor ignora este mensaje.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button>Restaurar contraseña</button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>
