@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<div th:fragment="alerts">
+    <div th:if="${info != null}">
+        <div th:if="${info.typeToast == 'error'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <p class="fw-bold">[[${info.title}]]</p>
+            <p>[[${info.message}]]</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${info.typeToast == 'success'}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <p class="fw-bold">[[${info.title}]]</p>
+            <p>[[${info.message}]]</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
