@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <header th:insert="~{fragments/head :: head}">
+
+    </header>
+</head>
+
+<body class="g-sidenav-show  bs-blue-200">
+    <aside
+        class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bs-blue"
+        id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand m-0" href="#">
+                <span class="ms-1 font-weight-bold text-black">Borrar filtros</span>
+            </a>
+        </div>
+        <hr class="horizontal light mt-0 mb-2">
+        <div class="collapse navbar-collapse  w-auto  max-height-vh-100" id="sidenav-collapse-main">
+            <span class="nav-link-text ms-1">Sexo</span>
+            <div>
+                <div class="select animated zoomIn">
+                    <input type="radio" name="option1">
+                    <span class="placeholder">Selecciona</span>
+                    <label class="option">
+                        <input type="radio" name="option1">
+                        <span class="title animated fadeIn">Jugueton</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option1">
+                        <span class="title animated fadeIn">Ruidoso</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option1">
+                        <span class="title animated fadeIn">Amigable</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option1">
+                        <span class="title animated fadeIn">Activo</span>
+                    </label>
+                </div>
+            </div>
+            <br>
+            <span class="nav-link-text ms-1">Tamaño</span>
+            <div>
+                <div class="select animated zoomIn">
+                    <input type="radio" name="option2">
+                    <span class="placeholder">Selecciona</span>
+                    <label class="option">
+                        <input type="radio" name="option2">
+                        <span class="title animated fadeIn">Grande</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option2">
+                        <span class="title animated fadeIn">Mediano</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option2">
+                        <span class="title animated fadeIn">Pequeño</span>
+                    </label>
+                </div>
+            </div>
+            <br>
+            <span class="nav-link-text ms-1">Color</span>
+            <div>
+                <div class="select animated zoomIn3">
+                    <input type="radio" name="option">
+                    <span class="placeholder">Selecciona</span>
+                    <label class="option">
+                        <input type="radio" name="option3">
+                        <span class="title animated fadeIn">Blanco</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option3">
+                        <span class="title animated fadeIn">Café</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option3">
+                        <span class="title animated fadeIn">Manchas</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="option3">
+                        <span class="title animated fadeIn">Bicolor</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="sidenav-footer position-absolute w-100 bottom-0 ">
+            <div class="mx-3">
+                <a class="btn bg-gradient-primary mt-4 w-100" type="button">Filtrar</a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+    <div th:replace="~{fragments/navigation :: navigation}">
+
+        <div class="container-fluid py-4">
+
+            <div class="row mt-4">
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2 ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <img id="chart-bars" class="chart-canvas" height="170" width="300" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex ">
+                                <span class="badge badge-sm bg-gradient-success">Perro</span>
+                            </div>
+                            <hr class="dark horizontal">
+                            <h6 class="mb-0 ">Kira</h6>
+                            <p class="text-sm "><span class="font-weight-bolder">Sexo:</span>Hembra</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Edad:</span>4 años</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Tamaño:</span>Grande</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Carácter:</span>Juguetón</p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm">Añadido el 21 Febrero 2022</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2 ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <img id="chart-bars" class="chart-canvas" height="170" width="300" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex ">
+                                <span class="badge badge-sm bg-gradient-success">Perro</span>
+                            </div>
+                            <hr class="dark horizontal">
+                            <h6 class="mb-0 ">Kira</h6>
+                            <p class="text-sm "><span class="font-weight-bolder">Sexo:</span>Hembra</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Edad:</span>4 años</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Tamaño:</span>Grande</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Carácter:</span>Juguetón</p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm">Añadido el 21 Febrero 2022</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-4 mb-4">
+                    <div class="card z-index-2 ">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                                <div class="chart">
+                                    <img id="chart-bars" class="chart-canvas" height="170" width="300" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex ">
+                                <span class="badge badge-sm bg-gradient-success">Perro</span>
+                            </div>
+                            <hr class="dark horizontal">
+                            <h6 class="mb-0 ">Kira</h6>
+                            <p class="text-sm "><span class="font-weight-bolder">Sexo:</span>Hembra</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Edad:</span>4 años</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Tamaño:</span>Grande</p>
+                            <p class="text-sm "><span class="font-weight-bolder">Carácter:</span>Juguetón</p>
+                            <hr class="dark horizontal">
+                            <div class="d-flex ">
+                                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                                <p class="mb-0 text-sm">Añadido el 21 Febrero 2022</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>
