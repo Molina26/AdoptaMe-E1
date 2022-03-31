@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <header th:insert="~{fragments/head :: head}">
 
-    </header>
+<header th:insert="~{fragments/head :: head}">
+
+</header>
 
 <body>
     <input type="hidden" th:value="${login}">
@@ -15,31 +16,32 @@
     </div>
 
     <main>
-    <div class="container" id="container">
-        <!--Formulario de registro-->
-        <div class="form-container sign-up-container">
-            <form action="#">
-                <h1 class="h1sing">Crear Cuenta</h1>
-                <input type="text" name="name" placeholder="Nombre" />
-                <input type="text" name="first_lastname" placeholder="Primer apellido" />
-                <input type="text" name="second_lastname" placeholder="Segundo apellido" />
-                <div class="row">
-                    <div class="col">
-                        <input type="text" name="username" placeholder="Usuario"/>
-                    </div>
-                         <select name="rol">
+
+        <div class="container" id="container">
+            <!--Formulario de registro-->
+            <div class="form-container sign-up-container">
+                <form action="#">
+                    <h1 class="h1sing">Crear Cuenta</h1>
+                    <input type="text" name="name" placeholder="Nombre" />
+                    <input type="text" name="first_lastname" placeholder="Primer apellido" />
+                    <input type="text" name="second_lastname" placeholder="Segundo apellido" />
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" name="username" placeholder="Usuario" />
+                        </div>
+                        <select name="rol">
                             <option value="">Selecciona</option>
                         </select>
-                </div>
-                <input type="email" name="email" placeholder="Email" />
-                <input type="password" name="password" placeholder="Contraseña" />
-                <input type="password" name="password" placeholder="Confirmar Contraseña" />
-                <button>Registrar</button>
-            </form>
-        </div>
-        <!--Inicio de sesion perro-->
-        <div class="form-container sign-in-container">
-            <form th:action="@{/login}" method="post">
+                    </div>
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Contraseña" />
+                    <input type="password" name="password" placeholder="Confirmar Contraseña" />
+                    <button>Registrar</button>
+                </form>
+            </div>
+            <!--Inicio de sesion perro-->
+            <div class="form-container sign-in-container">
+                <form th:action="@{/login}" method="post">
                     <div class="ear ear--left"></div>
                     <div class="ear ear--right"></div>
                     <div class="face">
@@ -118,63 +120,68 @@
                             <button>Entrar</button>
                         </div>
                     </div>
-            </form>
-        </div>
-        <!--lado perro pelota-->
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>¡Volviste!</h1>
+                </form>
+            </div>
+            <!--lado perro pelota-->
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>¡Volviste!</h1>
 
-                    <div class="dog">
-                        <div class="dog-body">
-                            <div class="dog-tail">
+                        <div class="dog">
+                            <div class="dog-body">
                                 <div class="dog-tail">
+                                    >>>>>>> 43ab651fb730877c28d2ae0bdd6903f0913cf2b6
                                     <div class="dog-tail">
                                         <div class="dog-tail">
                                             <div class="dog-tail">
                                                 <div class="dog-tail">
                                                     <div class="dog-tail">
-                                                        <div class="dog-tail"></div>
+                                                        <div class="dog-tail">
+                                                            <div class="dog-tail">
+                                                                <div class="dog-tail"></div>
+                                                            </div>
+                                                            <div class="dog-tail"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="dog-torso"></div>
-                        <div class="dog-head">
-                            <div class="dog-ears">
-                                <div class="dog-ear"></div>
-                                <div class="dog-ear"></div>
-                            </div>
-                            <div class="dog-eyes">
-                                <div class="dog-eye"></div>
-                                <div class="dog-eye"></div>
-                            </div>
-                            <div class="dog-muzzle">
-                                <div class="dog-tongue"></div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="ball" tabindex="0"></div>
-                    <button class="ghost" id="signIn">Inicia sesión</button>
-                </div>
-                <!--lado logo-->
-                <div class="overlay-panel overlay-right">
-                    <img th:src="@{/images/logo.png}" class="panel-logo">
-                    <h1 class="h1sing">¡Hola, Amigo!</h1>
-                    <p>¿Aún no tienes cuenta? Crea una para no perderte de nada</p>
-                    <button class="ghost" id="signUp">Registrarse</button>
+                            </div>
+                            <div class="dog-torso"></div>
+                            <div class="dog-head">
+                                <div class="dog-ears">
+                                    <div class="dog-ear"></div>
+                                    <div class="dog-ear"></div>
+                                </div>
+                                <div class="dog-eyes">
+                                    <div class="dog-eye"></div>
+                                    <div class="dog-eye"></div>
+                                </div>
+                                <div class="dog-muzzle">
+                                    <div class="dog-tongue"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ball" tabindex="0"></div>
+                        <button class="ghost" id="signIn">Inicia sesión</button>
+                    </div>
+                    <!--lado logo-->
+                    <div class="overlay-panel overlay-right">
+                        <img th:src="@{/images/logo.png}" class="panel-logo">
+                        <h1 class="h1sing">¡Hola, Amigo!</h1>
+                        <p>¿Aún no tienes cuenta? Crea una para no perderte de nada</p>
+                        <button class="ghost" id="signUp">Registrarse</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<div th:replace="~{fragments/footer :: footer}"></div>
+    </main>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 
