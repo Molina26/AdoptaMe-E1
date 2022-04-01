@@ -162,4 +162,18 @@ public class PetController {
             this.listSizes = sizeService.findAllSizes();
         }
     }
+
+    /*Enlace para Blog*/
+    @GetMapping("/blog")
+    public String blog() {
+        
+        return "views/blog/blog";
+    }
+
+    @GetMapping("/detailblog")
+    public String detailblog() {
+        
+        return "views/blog/detailBlog";
+    }
+    
 }
