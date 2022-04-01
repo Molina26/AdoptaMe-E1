@@ -72,4 +72,22 @@ public class Pet {
     @PersonalityAccepted(message = "Este caracter no es aceptado")
     @NotNull
     private Personality personality;
+
+    @Override
+    public String toString() {
+        return "Pet: {" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", sex='" + sex + '\'' +
+                ", type='" + type + '\'' +
+                ", image='" + image + '\'' +
+                ", availableAdoption=" + availableAdoption +
+                ", isAccepted='" + isAccepted + '\'' +
+                ", createdAt=" + createdAt +
+                ", size=" + size +
+                ", color=" + color +
+                ", personality=" + personality +
+                '}';
+    }
 }

@@ -6,30 +6,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import utez.edu.mx.AdoptaMe_E1.entity.Color;
-import utez.edu.mx.AdoptaMe_E1.entity.Pet;
-import utez.edu.mx.AdoptaMe_E1.entity.Personality;
-import utez.edu.mx.AdoptaMe_E1.entity.Size;
+import utez.edu.mx.AdoptaMe_E1.entity.*;
 import utez.edu.mx.AdoptaMe_E1.model.responses.InfoToast;
-import utez.edu.mx.AdoptaMe_E1.service.ColorServiceImpl;
-import utez.edu.mx.AdoptaMe_E1.service.PersonalityServiceImpl;
-import utez.edu.mx.AdoptaMe_E1.service.PetServiceImpl;
-import utez.edu.mx.AdoptaMe_E1.service.SizeServiceImpl;
+import utez.edu.mx.AdoptaMe_E1.service.*;
 import utez.edu.mx.AdoptaMe_E1.util.ImageManager;
+import utez.edu.mx.AdoptaMe_E1.util.InfoMovement;
 import utez.edu.mx.AdoptaMe_E1.util.PageRender;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(path = "/pets")
@@ -45,6 +39,8 @@ public class PetController {
 
     private final ImageManager imageManager;
 
+    private final InfoMovement infoMovement;
+
     private final Logger logger = LoggerFactory.getLogger(PetController.class);
 
     private List<Color> listColors = new ArrayList<>();
@@ -53,14 +49,21 @@ public class PetController {
 
     private List<Size> listSizes = new ArrayList<>();
 
+    private final String MODULE_NAME = "PETS";
 
-    public PetController(PetServiceImpl petService, ColorServiceImpl colorService, PersonalityServiceImpl personalityService, SizeServiceImpl sizeService, ImageManager imageManager) {
+
+    public PetController(PetServiceImpl petService,
+                         ColorServiceImpl colorService,
+                         PersonalityServiceImpl personalityService,
+                         SizeServiceImpl sizeService,
+                         ImageManager imageManager,
+                         InfoMovement infoMovement) {
         this.petService = petService;
         this.colorService = colorService;
         this.personalityService = personalityService;
         this.sizeService = sizeService;
         this.imageManager = imageManager;
-
+        this.infoMovement = infoMovement;
         this.definePetsInfoLists();
     }
 
@@ -68,15 +71,16 @@ public class PetController {
     @GetMapping("/management_list")
     @Secured({"ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO"})
     public String findListPetsManagement(@RequestParam(name = "page", defaultValue = "0")int page, Model model) {
-        int itemsByPage = 4;
+        int itemsByPage = 5;
         Pageable pageRequest = PageRequest.of(page, itemsByPage);
 
-        Page<Pet> pets = petService.findAllPageable(pageRequest);
+        Page<Pet> pets = petService.findAll(pageRequest);
 
         PageRender<Pet> pageRender = new PageRender<>("/pets/management_list", pets);
 
         model.addAttribute("listPets", pets);
         model.addAttribute("page", pageRender);
+        model.addAttribute("index", (itemsByPage * page));
 
         return "views/pet/listTablePets";
     }
@@ -93,10 +97,12 @@ public class PetController {
 
     @PostMapping("/save")
     @Secured({"ROLE_VOLUNTARIO"})
-    public String save(@Valid Pet pet, BindingResult result, Model model, @RequestParam("imageFile") MultipartFile imageFile, RedirectAttributes flash) {
+    public String save(@Valid Pet pet, Authentication auth ,BindingResult result, Model model, @RequestParam("imageFile") MultipartFile imageFile, RedirectAttributes flash) {
         InfoToast info = new InfoToast();
 
-        logger.info(pet.toString());
+        infoMovement.setActionMovement("INSERT");
+        infoMovement.setUsername(auth.getName());
+        infoMovement.setModuleName(MODULE_NAME);
 
         if (result.hasErrors() || imageFile.isEmpty()) {
             model.addAttribute("listSizes", this.listSizes);
@@ -139,6 +145,92 @@ public class PetController {
 
         return "redirect:/pets/management_list";
     }
+
+    @GetMapping("/find_update/{id}")
+    @Secured({"ROLE_VOLUNTARIO"})
+    public String findPetToUpdate(@PathVariable("id") Long id, Model model, RedirectAttributes flash) {
+
+        Optional<Pet> petExisted = petService.findPetById(id);
+
+        if (petExisted.isPresent()) {
+            this.definePetsInfoLists();
+            model.addAttribute("pet", petExisted.get());
+            model.addAttribute("listSizes", this.listSizes);
+            model.addAttribute("listPersonalities", this.listPersonalities);
+            model.addAttribute("listColors", this.listColors);
+            return "views/pet/updatePet";
+
+        }
+
+        return "redirect:/pets/management_list";
+    }
+
+    @PostMapping("/update")
+    @Secured({"ROLE_VOLUNTARIO"})
+    public String update(@Valid Pet pet, BindingResult result, Authentication auth, Model model, @RequestParam("imageFile") MultipartFile imageFile, RedirectAttributes flash) {
+        InfoToast info = new InfoToast();
+
+        infoMovement.setActionMovement("UPDATE");
+        infoMovement.setUsername(auth.getName());
+        infoMovement.setModuleName(MODULE_NAME);
+
+        Optional<Pet> petExisted = petService.findPetById(pet.getId());
+
+        if (petExisted.isEmpty()) {
+            info.setTitle("Mascota no valida");
+            info.setMessage("La información que busca no es valida");
+            info.setTypeToast("error");
+
+            flash.addFlashAttribute("info", info);
+            return "redirect:/pets/management_list";
+        }
+
+        Pet petPersistent = petExisted.get();
+        pet.setImage(petPersistent.getImage());
+        pet.setCreatedAt(petPersistent.getCreatedAt());
+        pet.setAvailableAdoption(petPersistent.getAvailableAdoption());
+
+        if (result.hasErrors()) {
+            model.addAttribute("listSizes", this.listSizes);
+            model.addAttribute("listPersonalities", this.listPersonalities);
+            model.addAttribute("listColors", this.listColors);
+            return "views/pet/updatePet";
+        }
+
+        if (!imageFile.isEmpty()) {
+            String imageName = imageManager.insertImage(imageFile);
+
+            if (imageName == null) {
+
+                info.setTitle("Error en el servidor");
+                info.setMessage("Sucedio un error al intentar guardar la imagen");
+                info.setTypeToast("error");
+
+                model.addAttribute("listSizes", this.listSizes);
+                model.addAttribute("listPersonalities", this.listPersonalities);
+                model.addAttribute("listColors", this.listColors);
+                model.addAttribute("fileError", "Debe de seleccionar una imagen");
+                model.addAttribute("info", info);
+                return "views/pet/updatePet";
+            }
+
+            pet.setImage(imageName);
+
+        }
+
+        boolean petWasUpdated = petService.update(pet);
+
+        if (petWasUpdated) {
+            info.setTitle("Mascota actualizada");
+            info.setMessage("Se actualizo a ".concat(pet.getName()).concat(" correctamente"));
+            info.setTypeToast("success");
+
+            flash.addFlashAttribute("info", info);
+        }
+
+        return "redirect:/pets/management_list";
+    }
+
 
     private void definePetsInfoLists() {
         Long itemsColors = colorService.countAllColors();

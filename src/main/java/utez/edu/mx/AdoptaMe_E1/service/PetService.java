@@ -5,15 +5,17 @@ import org.springframework.data.domain.Pageable;
 import utez.edu.mx.AdoptaMe_E1.entity.Pet;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PetService {
     List<Pet> findLastInsertedToAdoption(String tracingRegister, Integer limit);
 
-    Page<Pet> findAllPageable(Pageable pageable);
-
     Page<Pet> findAll(Pageable pageable);
+
+    Optional<Pet> findPetById(Long id);
 
     boolean create(Pet pet);
 
-    Pet findOne(Long id);
+    boolean update(Pet pet);
+
 }

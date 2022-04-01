@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import utez.edu.mx.AdoptaMe_E1.handler.CustomLoginSuccessHandler;
 import utez.edu.mx.AdoptaMe_E1.handler.CustomLogoutSuccessHandler;
 import utez.edu.mx.AdoptaMe_E1.util.AppProperties;
+import utez.edu.mx.AdoptaMe_E1.util.InfoMovement;
 
 import java.nio.file.Paths;
 
@@ -36,6 +37,11 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean(name = "AppProperties")
     public static AppProperties getAppProperties() {
         return new AppProperties();
+    }
+
+    @Bean
+    public static InfoMovement getInfoMovement() {
+        return new InfoMovement();
     }
 
     @Override
