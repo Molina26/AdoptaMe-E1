@@ -2,15 +2,15 @@ package utez.edu.mx.adoptame.e1.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -19,7 +19,10 @@ import utez.edu.mx.adoptame.e1.entity.Color;
 import utez.edu.mx.adoptame.e1.entity.Personality;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.entity.Size;
+import utez.edu.mx.adoptame.e1.enums.TracingRegisterPet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
 
 import utez.edu.mx.adoptame.e1.service.PersonalityServiceImpl;
@@ -30,7 +33,6 @@ import utez.edu.mx.adoptame.e1.util.InfoMovement;
 import utez.edu.mx.adoptame.e1.util.PageRender;
 import utez.edu.mx.adoptame.e1.service.ColorServiceImpl;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,13 +72,12 @@ public class PetController {
 
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
 
-
     public PetController(PetServiceImpl petService,
-                         ColorServiceImpl colorService,
-                         PersonalityServiceImpl personalityService,
-                         SizeServiceImpl sizeService,
-                         ImageManager imageManager,
-                         InfoMovement infoMovement) {
+            ColorServiceImpl colorService,
+            PersonalityServiceImpl personalityService,
+            SizeServiceImpl sizeService,
+            ImageManager imageManager,
+            InfoMovement infoMovement) {
         this.petService = petService;
         this.colorService = colorService;
         this.personalityService = personalityService;
@@ -86,10 +87,9 @@ public class PetController {
         this.definePetsInfoLists();
     }
 
-
     @GetMapping("/management_list")
-    @Secured({"ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO"})
-    public String findListPetsManagement(@RequestParam(name = "page", defaultValue = "0")int page, Model model) {
+    @Secured({ "ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO" })
+    public String findListPetsManagement(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         int itemsByPage = 5;
         Pageable pageRequest = PageRequest.of(page, itemsByPage);
 
@@ -105,7 +105,7 @@ public class PetController {
     }
 
     @GetMapping("/create")
-    @Secured({"ROLE_VOLUNTARIO"})
+    @Secured({ "ROLE_VOLUNTARIO" })
     public String createPet(Model model) {
         this.definePetsInfoLists();
         model.addAttribute("pet", new PetInsertDto());
@@ -117,15 +117,16 @@ public class PetController {
     }
 
     @PostMapping("/save")
-    @Secured({"ROLE_VOLUNTARIO"})
+    @Secured({ "ROLE_VOLUNTARIO" })
     public String save(@ModelAttribute("pet") PetInsertDto pet,
-                       Authentication auth ,
-                       Model model,
-                       @RequestParam("imageFile") MultipartFile imageFile,
-                       RedirectAttributes flash) throws BindException {
+            Authentication auth,
+            Model model,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            RedirectAttributes flash) {
+
         InfoToast info = new InfoToast();
 
-        Map<String, List<String>> validation = petService.getValidationToInsert(pet);
+        Map<String, List<String>> validation = petService.getValidationToInsertPet(pet);
 
         infoMovement.setActionMovement("INSERT");
         infoMovement.setUsername(auth.getName());
@@ -145,7 +146,7 @@ public class PetController {
 
             if (imageName == null) {
 
-                info.setTitle("Error en el servidor");
+                info.setTitle("Error de imagen al guardar");
                 info.setMessage("Sucedio un error al intentar guardar la imagen");
                 info.setTypeToast("error");
 
@@ -173,14 +174,21 @@ public class PetController {
     }
 
     @GetMapping("/find_update/{id}")
-    @Secured({"ROLE_VOLUNTARIO"})
+    @Secured({ "ROLE_VOLUNTARIO" })
     public String findPetToUpdate(@PathVariable("id") Long id, Model model, RedirectAttributes flash) {
+
+        InfoToast info = new InfoToast();
 
         Optional<Pet> petExisted = petService.findPetById(id);
 
         if (petExisted.isPresent()) {
+
+            PetUpdateDto petInfo = new PetUpdateDto();
+
+            BeanUtils.copyProperties(petExisted.get(), petInfo);
+
             this.definePetsInfoLists();
-            model.addAttribute("pet", petExisted.get());
+            model.addAttribute("pet", petInfo);
             model.addAttribute(LIST_COLORS_NAME, this.listColors);
             model.addAttribute(LIST_PERSONALITIES_NAME, this.listPersonalities);
             model.addAttribute(LIST_SIZES_NAME, this.listSizes);
@@ -189,12 +197,22 @@ public class PetController {
 
         }
 
+        info.setTitle("Mascota no encontrada");
+        info.setMessage("La información que busca no es valida");
+        info.setTypeToast("error");
+
+        flash.addFlashAttribute("info", info);
+
         return "redirect:/pets/management_list";
     }
 
     @PostMapping("/update")
-    @Secured({"ROLE_VOLUNTARIO"})
-    public String update(@Valid Pet pet, BindingResult result, Authentication auth, Model model, @RequestParam("imageFile") MultipartFile imageFile, RedirectAttributes flash) {
+    @Secured({ "ROLE_VOLUNTARIO" })
+    public String update(PetUpdateDto pet,
+            Authentication auth,
+            Model model,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            RedirectAttributes flash) {
         InfoToast info = new InfoToast();
 
         infoMovement.setActionMovement("UPDATE");
@@ -212,15 +230,14 @@ public class PetController {
             return "redirect:/pets/management_list";
         }
 
-        Pet petPersistent = petExisted.get();
-        pet.setImage(petPersistent.getImage());
-        pet.setCreatedAt(petPersistent.getCreatedAt());
-        pet.setAvailableAdoption(petPersistent.getAvailableAdoption());
+        Map<String, List<String>> validationsUpdate = petService.getValidationToUpdatePet(pet);
 
-        if (result.hasErrors()) {
+        if (!validationsUpdate.isEmpty()) {
+            model.addAttribute("errors", validationsUpdate);
             model.addAttribute(LIST_COLORS_NAME, this.listColors);
             model.addAttribute(LIST_PERSONALITIES_NAME, this.listPersonalities);
             model.addAttribute(LIST_SIZES_NAME, this.listSizes);
+            model.addAttribute("pet", pet);
             return "views/pet/updatePet";
         }
 
@@ -229,7 +246,7 @@ public class PetController {
 
             if (imageName == null) {
 
-                info.setTitle("Error en el servidor");
+                info.setTitle("Error de imagen al actualizar");
                 info.setMessage("Sucedio un error al intentar guardar la imagen");
                 info.setTypeToast("error");
 
@@ -242,7 +259,6 @@ public class PetController {
             }
 
             pet.setImage(imageName);
-
         }
 
         boolean petWasUpdated = petService.update(pet);
@@ -258,6 +274,94 @@ public class PetController {
         return "redirect:/pets/management_list";
     }
 
+    @GetMapping("/detail-admin/{id}")
+    @Secured({ "ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO" })
+    public String findPetDetail(@PathVariable("id") Long id, Authentication auth, Model model,
+            RedirectAttributes flash) {
+
+        InfoToast info = new InfoToast();
+        boolean isAdmin = false;
+
+        Optional<Pet> petExisted = petService.findPetById(id);
+
+        if (petExisted.isPresent()) {
+
+            model.addAttribute("pet", petExisted.get());
+
+            for (GrantedAuthority authority : auth.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
+                    isAdmin = true;
+                }
+            }
+
+            if (isAdmin) {
+                PetTracingRegisterDto petDto = new PetTracingRegisterDto();
+
+                BeanUtils.copyProperties(petExisted.get(), petDto);
+                model.addAttribute("petTracing", petDto);
+                model.addAttribute("tracingOptions", TracingRegisterPet.values());
+            }
+
+            return "views/pet/detailPet";
+
+        }
+
+        info.setTitle("Mascota no encontrada");
+        info.setMessage("La información que busca no es correcta");
+        info.setTypeToast("error");
+
+        flash.addFlashAttribute("info", info);
+
+        return "redirect:/pets/management_list";
+    }
+
+    @PostMapping("/change")
+    @Secured({ "ROLE_ADMINISTRADOR" })
+    public String acceptOrRejectPet(PetTracingRegisterDto pet,
+            Authentication auth,
+            Model model,
+            RedirectAttributes flash) {
+        InfoToast info = new InfoToast();
+
+        infoMovement.setActionMovement("UPDATE");
+        infoMovement.setUsername(auth.getName());
+        infoMovement.setModuleName(MODULE_NAME);
+
+        Optional<Pet> petExisted = petService.findPetById(pet.getId());
+
+        if (petExisted.isEmpty()) {
+            info.setTitle("Mascota no valida");
+            info.setMessage("La información enviada no es permitida");
+            info.setTypeToast("error");
+
+            flash.addFlashAttribute("info", info);
+            return "redirect:/pets/management_list";
+        }
+
+        Map<String, List<String>> validationsUpdate = petService.getValidationToAcceptOrReject(pet);
+
+        if (!validationsUpdate.isEmpty()) {
+            model.addAttribute("pet", petExisted.get());
+            model.addAttribute("errors", validationsUpdate);
+            model.addAttribute("petTracing", pet);
+            model.addAttribute("tracingOptions", TracingRegisterPet.values());
+        } else {
+            boolean petWasUpdated = petService.acceptOrRejectPet(pet);
+
+            if (petWasUpdated) {
+                info.setTitle("Mascota ".concat(petExisted.get().getName()).concat(" actualizada"));
+                info.setMessage("Se asigno el valor de ".concat(pet.getIsAccepted()).concat(" correctamente"));
+                info.setTypeToast("success");
+
+                flash.addFlashAttribute("info", info);
+
+                return "redirect:/pets/detail-admin/".concat(pet.getId().toString());
+
+            }
+        }
+
+        return "views/pet/detailPet";
+    }
 
     private void definePetsInfoLists() {
         Long itemsColors = colorService.countAllColors();
@@ -273,7 +377,8 @@ public class PetController {
             this.listColors = colorService.findAllColors();
         }
 
-        if (listPersonalitiesSize == 0 || itemsPersonalities > listPersonalitiesSize || itemsPersonalities < listPersonalitiesSize) {
+        if (listPersonalitiesSize == 0 || itemsPersonalities > listPersonalitiesSize
+                || itemsPersonalities < listPersonalitiesSize) {
             this.listPersonalities = personalityService.findAllPersonalities();
         }
 
