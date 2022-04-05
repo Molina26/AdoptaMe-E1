@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface PetService {
     boolean create(PetInsertDto pet, String imageName);
 
     boolean update(PetUpdateDto pet);
+
+    boolean acceptOrRejectPet(PetTracingRegisterDto pet);
 
 }

@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,9 @@ import utez.edu.mx.adoptame.e1.entity.Color;
 import utez.edu.mx.adoptame.e1.entity.Personality;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.entity.Size;
+import utez.edu.mx.adoptame.e1.enums.TracingRegisterPet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
 
@@ -123,7 +126,6 @@ public class PetController {
 
         InfoToast info = new InfoToast();
 
-
         Map<String, List<String>> validation = petService.getValidationToInsertPet(pet);
 
         infoMovement.setActionMovement("INSERT");
@@ -199,7 +201,6 @@ public class PetController {
         info.setMessage("La información que busca no es valida");
         info.setTypeToast("error");
 
-
         flash.addFlashAttribute("info", info);
 
         return "redirect:/pets/management_list";
@@ -208,10 +209,10 @@ public class PetController {
     @PostMapping("/update")
     @Secured({ "ROLE_VOLUNTARIO" })
     public String update(PetUpdateDto pet,
-                        Authentication auth,
-                        Model model,
-                        @RequestParam("imageFile") MultipartFile imageFile,
-                        RedirectAttributes flash) {
+            Authentication auth,
+            Model model,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            RedirectAttributes flash) {
         InfoToast info = new InfoToast();
 
         infoMovement.setActionMovement("UPDATE");
@@ -271,6 +272,95 @@ public class PetController {
         }
 
         return "redirect:/pets/management_list";
+    }
+
+    @GetMapping("/detail-admin/{id}")
+    @Secured({ "ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO" })
+    public String findPetDetail(@PathVariable("id") Long id, Authentication auth, Model model,
+            RedirectAttributes flash) {
+
+        InfoToast info = new InfoToast();
+        boolean isAdmin = false;
+
+        Optional<Pet> petExisted = petService.findPetById(id);
+
+        if (petExisted.isPresent()) {
+
+            model.addAttribute("pet", petExisted.get());
+
+            for (GrantedAuthority authority : auth.getAuthorities()) {
+                if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
+                    isAdmin = true;
+                }
+            }
+
+            if (isAdmin) {
+                PetTracingRegisterDto petDto = new PetTracingRegisterDto();
+
+                BeanUtils.copyProperties(petExisted.get(), petDto);
+                model.addAttribute("petTracing", petDto);
+                model.addAttribute("tracingOptions", TracingRegisterPet.values());
+            }
+
+            return "views/pet/detailPet";
+
+        }
+
+        info.setTitle("Mascota no encontrada");
+        info.setMessage("La información que busca no es correcta");
+        info.setTypeToast("error");
+
+        flash.addFlashAttribute("info", info);
+
+        return "redirect:/pets/management_list";
+    }
+
+    @PostMapping("/change")
+    @Secured({ "ROLE_ADMINISTRADOR" })
+    public String acceptOrRejectPet(PetTracingRegisterDto pet,
+            Authentication auth,
+            Model model,
+            RedirectAttributes flash) {
+        InfoToast info = new InfoToast();
+
+        infoMovement.setActionMovement("UPDATE");
+        infoMovement.setUsername(auth.getName());
+        infoMovement.setModuleName(MODULE_NAME);
+
+        Optional<Pet> petExisted = petService.findPetById(pet.getId());
+
+        if (petExisted.isEmpty()) {
+            info.setTitle("Mascota no valida");
+            info.setMessage("La información enviada no es permitida");
+            info.setTypeToast("error");
+
+            flash.addFlashAttribute("info", info);
+            return "redirect:/pets/management_list";
+        }
+
+        Map<String, List<String>> validationsUpdate = petService.getValidationToAcceptOrReject(pet);
+
+        if (!validationsUpdate.isEmpty()) {
+            model.addAttribute("pet", petExisted.get());
+            model.addAttribute("errors", validationsUpdate);
+            model.addAttribute("petTracing", pet);
+            model.addAttribute("tracingOptions", TracingRegisterPet.values());
+        } else {
+            boolean petWasUpdated = petService.acceptOrRejectPet(pet);
+
+            if (petWasUpdated) {
+                info.setTitle("Mascota ".concat(petExisted.get().getName()).concat(" actualizada"));
+                info.setMessage("Se asigno el valor de ".concat(pet.getIsAccepted()).concat(" correctamente"));
+                info.setTypeToast("success");
+
+                flash.addFlashAttribute("info", info);
+
+                return "redirect:/pets/detail-admin/".concat(pet.getId().toString());
+
+            }
+        }
+
+        return "views/pet/detailPet";
     }
 
     private void definePetsInfoLists() {

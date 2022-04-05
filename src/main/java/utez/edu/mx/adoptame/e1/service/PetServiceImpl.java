@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.PetRepository;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
@@ -98,7 +99,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public boolean update(PetUpdateDto petDto) {
-        boolean flagInsert = false;
+        boolean flagUpdate = false;
 
         Optional<Pet> previousData = petRepository.findById(petDto.getId());
 
@@ -109,12 +110,10 @@ public class PetServiceImpl implements PetService {
                 BeanUtils.copyProperties(previousData.get(), petToUpdate);
                 BeanUtils.copyProperties(petDto, petToUpdate);
 
-                logger.info("pet to update " + petToUpdate);
-
                 Pet petUpdated = petRepository.save(petToUpdate);
 
                 if (petUpdated.getId() != 0) {
-                    flagInsert = true;
+                    flagUpdate = true;
 
                     MovementManagement movement = new MovementManagement();
 
@@ -128,12 +127,46 @@ public class PetServiceImpl implements PetService {
                     movementManagementService.createOrUpdate(movement);
                 }
             } catch (Exception ex) {
-
                 logger.error("error to update a pet");
             }
         }
 
-        return flagInsert;
+        return flagUpdate;
+    }
+
+    @Override
+    public boolean acceptOrRejectPet(PetTracingRegisterDto petDto) {
+        boolean flag = false;
+        Optional<Pet> previousData = petRepository.findById(petDto.getId());
+
+        if (previousData.isPresent()) {
+            try {
+                Pet petToUpdate = new Pet();
+
+                BeanUtils.copyProperties(previousData.get(), petToUpdate);
+                BeanUtils.copyProperties(petDto, petToUpdate);
+
+                Pet petAcceptedOrRejected = petRepository.save(petToUpdate);
+
+                if (petAcceptedOrRejected.getId() != 0) {
+                    flag = true;
+
+                    MovementManagement movement = new MovementManagement();
+
+                    movement.setModuleName(infoMovement.getModuleName());
+                    movement.setUsername(infoMovement.getUsername());
+                    movement.setAction(infoMovement.getActionMovement());
+                    movement.setMovementDate(new Date());
+                    movement.setPreviousData(previousData.get().toString());
+                    movement.setNewData(petAcceptedOrRejected.toString());
+
+                    movementManagementService.createOrUpdate(movement);
+                }
+            } catch (Exception ex) {
+                logger.error("error to accepted a pet");
+            }
+        }
+        return flag;
     }
 
     public Map<String, List<String>> getValidationToInsertPet(PetInsertDto petDto) {
@@ -144,7 +177,7 @@ public class PetServiceImpl implements PetService {
         if (!violations.isEmpty()) {
 
             for (ConstraintViolation<PetInsertDto> error : violations) {
-                List<String> messages = new ArrayList<>();
+                List<String> messagesToInsert = new ArrayList<>();
 
                 Path path = error.getPropertyPath();
                 String key = path.toString();
@@ -153,8 +186,8 @@ public class PetServiceImpl implements PetService {
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {
-                    messages.add(message);
-                    errors.put(key, messages);
+                    messagesToInsert.add(message);
+                    errors.put(key, messagesToInsert);
                 }
 
             }
@@ -171,7 +204,7 @@ public class PetServiceImpl implements PetService {
 
             for (ConstraintViolation<PetUpdateDto> error : violations) {
 
-                List<String> messages = new ArrayList<>();
+                List<String> messagesToUpdate = new ArrayList<>();
 
                 Path path = error.getPropertyPath();
                 String key = path.toString();
@@ -180,12 +213,37 @@ public class PetServiceImpl implements PetService {
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {
-                    messages.add(message);
-                    errors.put(key, messages);
+                    messagesToUpdate.add(message);
+                    errors.put(key, messagesToUpdate);
                 }
             }
         }
         return errors;
     }
 
+    public Map<String, List<String>> getValidationToAcceptOrReject(PetTracingRegisterDto petDto) {
+        Set<ConstraintViolation<PetTracingRegisterDto>> violations = validator.validate(petDto);
+
+        Map<String, List<String>> errors = new HashMap<>();
+
+        if (!violations.isEmpty()) {
+
+            for (ConstraintViolation<PetTracingRegisterDto> error : violations) {
+                List<String> messagesToAcceptOrReject = new ArrayList<>();
+
+                Path path = error.getPropertyPath();
+                String key = path.toString();
+                String message = error.getMessage();
+
+                if (errors.get(key) != null) {
+                    errors.get(key).add(message);
+                } else {
+                    messagesToAcceptOrReject.add(message);
+                    errors.put(key, messagesToAcceptOrReject);
+                }
+
+            }
+        }
+        return errors;
+    }
 }
