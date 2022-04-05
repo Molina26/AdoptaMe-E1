@@ -13,17 +13,37 @@
         </div>
 
         <form th:object="${pet}" class="row mt-3 px-5" th:action="@{/pets/save}" method="post" enctype="multipart/form-data">
+<<<<<<< HEAD
             <input type="hidden" name="isAccepted" value="pendiente"/>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" th:field="*{name}" class="form-control" placeholder="Nombre" />
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+=======
+            <div class="col-12 col-sm-6 col-md-4 mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="Nombre" />
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('name') != null}">
+                    <span th:each="error: ${errors.get('name')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+>>>>>>> manu
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="agePet" class="form-label">Edad</label>
                 <input type="text" th:field="*{age}" class="form-control" id="agePet" aria-describedby="emailHelp" placeholder="Edad">
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('age') != null}">
+                    <span th:each="error: ${errors.get('age')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+>>>>>>> manu
             </div>
             <div  class="col-12 col-sm-6 col-md-4 mb-3">
                 <label class="form-label">Tipo de mascota</label>
@@ -39,7 +59,16 @@
                         Gato
                     </label>
                 </div>
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('type') != null}">
+                    <span th:each="error: ${errors.get('type')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+>>>>>>> manu
             </div>
             <div  class="col-12 col-sm-6 col-md-4 mb-3">
                 <label class="form-label">Sexo de la mascota</label>
@@ -55,7 +84,16 @@
                         Hembra
                     </label>
                 </div>
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}"></div>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('sex') != null}">
+                    <span th:each="error: ${errors.get('sex')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+>>>>>>> manu
             </div>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="color" class="form-label">Color</label>
@@ -63,7 +101,16 @@
                     <option selected value="0">Selecciona</option>
                     <option th:each="itemColor: ${listColors}" th:value="${itemColor.id}" th:text="${itemColor.name}"></option>
                 </select>
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('color')}" th:errors="*{color}"></div>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('color') != null}">
+                    <span th:each="error: ${errors.get('color')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+>>>>>>> manu
             </div>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="size" class="form-label">Tamaño</label>
@@ -71,7 +118,16 @@
                     <option selected value="0">Selecciona</option>
                     <option th:each="itemSize: ${listSizes}" th:value="${itemSize.id}" th:text="${itemSize.name}"></option>
                 </select>
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('size')}" th:errors="*{size}"></div>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('size') != null}">
+                    <span th:each="error: ${errors.get('size')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+>>>>>>> manu
             </div>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="personality" class="form-label">Carácter</label>
@@ -79,10 +135,22 @@
                     <option selected value="0">Selecciona</option>
                     <option th:each="itemPersonality: ${listPersonalities}" th:value="${itemPersonality.id}" th:text="${itemPersonality.name}"></option>
                 </select>
+<<<<<<< HEAD
                 <div class="form-text text-danger" th:if="${#fields.hasErrors('personality')}" th:errors="*{personality}"></div>
             </div>
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="formFile" class="form-label">Imagen de la mascota</label>
+=======
+                <div class="form-text text-danger" th:if="${errors != null && errors.get('personality') != null}">
+                    <span th:each="error: ${errors.get('personality')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4 mb-3">
+                <label class="form-label">Imagen de la mascota</label>
+>>>>>>> manu
                 <input class="form-control" type="file" name="imageFile" accept="image/png, image/jpeg, image/jpg, image/gif, image/svg">
                 <div class="form-text text-danger" th:if="${fileError != null}" >[[${fileError}]]</div>
             </div>

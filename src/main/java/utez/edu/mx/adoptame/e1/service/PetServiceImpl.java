@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.PetRepository;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
 
@@ -20,7 +21,7 @@ import javax.validation.Validator;
 import java.util.*;
 
 @Service
-public class PetServiceImpl implements PetService{
+public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
 
@@ -33,15 +34,17 @@ public class PetServiceImpl implements PetService{
 
     private final Logger logger = LoggerFactory.getLogger(PetServiceImpl.class);
 
-    public PetServiceImpl(PetRepository repository, MovementManagementServiceImpl movementManagementService, InfoMovement infoMovement) {
+    public PetServiceImpl(PetRepository repository, MovementManagementServiceImpl movementManagementService,
+                          InfoMovement infoMovement) {
         this.petRepository = repository;
         this.movementManagementService = movementManagementService;
         this.infoMovement = infoMovement;
     }
 
     @Override
-    public List<Pet> findLastInsertedToAdoption(String tracingRegister,Integer limit) {
-//        return petRepository.findLastInsertedToAdoptionWithLimit(tracingRegister, limit);
+    public List<Pet> findLastInsertedToAdoption(String tracingRegister, Integer limit) {
+        // return petRepository.findLastInsertedToAdoptionWithLimit(tracingRegister,
+        // limit);
         return null;
     }
 
@@ -70,7 +73,7 @@ public class PetServiceImpl implements PetService{
         pet.setCreatedAt(new Date());
         pet.setImage(imageName);
         pet.setIsAccepted("pendiente");
-        logger.info("pet to insert" + pet);
+
         try {
             Pet petInserted = petRepository.save(pet);
 
@@ -87,21 +90,28 @@ public class PetServiceImpl implements PetService{
                 movementManagementService.createOrUpdate(movement);
             }
         } catch (Exception ex) {
-            logger.error("error to insert a pet " + ex.getMessage());
+            logger.error("error to insert a pet");
         }
 
         return flagInsert;
     }
 
     @Override
-    public boolean update(Pet pet) {
+    public boolean update(PetUpdateDto petDto) {
         boolean flagInsert = false;
 
-        Optional<Pet> previousData = petRepository.findById(pet.getId());
+        Optional<Pet> previousData = petRepository.findById(petDto.getId());
 
         if (previousData.isPresent()) {
             try {
-                Pet petUpdated = petRepository.save(pet);
+                Pet petToUpdate = new Pet();
+
+                BeanUtils.copyProperties(previousData.get(), petToUpdate);
+                BeanUtils.copyProperties(petDto, petToUpdate);
+
+                logger.info("pet to update " + petToUpdate);
+
+                Pet petUpdated = petRepository.save(petToUpdate);
 
                 if (petUpdated.getId() != 0) {
                     flagInsert = true;
@@ -119,24 +129,23 @@ public class PetServiceImpl implements PetService{
                 }
             } catch (Exception ex) {
 
-                logger.error("error to update a pet " + ex.getMessage());
+                logger.error("error to update a pet");
             }
         }
 
         return flagInsert;
     }
 
-    public Map<String, List<String>> getValidationToInsert(PetInsertDto petDto) {
+    public Map<String, List<String>> getValidationToInsertPet(PetInsertDto petDto) {
         Set<ConstraintViolation<PetInsertDto>> violations = validator.validate(petDto);
 
         Map<String, List<String>> errors = new HashMap<>();
 
         if (!violations.isEmpty()) {
-            int iter = 1;
 
-            for (ConstraintViolation<PetInsertDto> error: violations) {
+            for (ConstraintViolation<PetInsertDto> error : violations) {
                 List<String> messages = new ArrayList<>();
-                logger.error(iter + " : " + error.toString());
+
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
@@ -148,7 +157,32 @@ public class PetServiceImpl implements PetService{
                     errors.put(key, messages);
                 }
 
-                iter++;
+            }
+        }
+        return errors;
+    }
+
+    public Map<String, List<String>> getValidationToUpdatePet(PetUpdateDto petDto) {
+        Set<ConstraintViolation<PetUpdateDto>> violations = validator.validate(petDto);
+
+        Map<String, List<String>> errors = new HashMap<>();
+
+        if (!violations.isEmpty()) {
+
+            for (ConstraintViolation<PetUpdateDto> error : violations) {
+
+                List<String> messages = new ArrayList<>();
+
+                Path path = error.getPropertyPath();
+                String key = path.toString();
+                String message = error.getMessage();
+
+                if (errors.get(key) != null) {
+                    errors.get(key).add(message);
+                } else {
+                    messages.add(message);
+                    errors.put(key, messages);
+                }
             }
         }
         return errors;

@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
-import utez.edu.mx.adoptame.e1.entity.Role;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
 
 import java.util.ArrayList;
@@ -33,10 +32,7 @@ public class JpaUserDetailService implements UserDetailsService {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        for (Role rol: user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(rol.getName()));
-        }
-
+        authorities.add(new SimpleGrantedAuthority(user.getRol().getName()));
 
         if (authorities.isEmpty()) {
             throw new UsernameNotFoundException("El usuario " + username + " no tiene un rol asignado");
