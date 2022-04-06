@@ -1,15 +1,17 @@
 package utez.edu.mx.adoptame.e1.service;
 
-import org.springframework.stereotype.Service;
-import utez.edu.mx.adoptame.e1.entity.Blog;
-import java.util.List;
 
-@Service
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import utez.edu.mx.adoptame.e1.entity.Blog;
+import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
+import java.util.Optional;
+
+
 public interface BlogService {
-    public List<Blog> findAllBlog();
-    public List<Blog> findAllBlogByIsPrincipal(); 
-    public Blog findBlogById(Long id);
-    public Boolean saveBlog(Blog blog);
-    public Boolean deleteBlogById(Long id);
+     Page<Blog> findAllBlog(Pageable pageable);
+     Optional<Blog> findBlogById(Long id);
+     boolean saveBlog(BlogInsertDto blog, String imageName, String username);
+     boolean updateBlog(Blog blog);
    
 }

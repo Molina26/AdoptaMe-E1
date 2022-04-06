@@ -3,10 +3,6 @@ package utez.edu.mx.adoptame.e1.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -36,4 +32,17 @@ public class Blog {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserAdoptame user;
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", isPrincipal=" + isPrincipal +
+                ", image='" + image + '\'' +
+                ", createdAt=" + createdAt +
+                ", user=" + user +
+                '}';
+    }
 }

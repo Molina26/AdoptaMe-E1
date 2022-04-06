@@ -24,56 +24,5 @@ import java.util.Date;
 @RequestMapping(value = "/blog")
 public class BlogController {
 
-    @Autowired
-    BlogServiceImpl blogServiceImpl;
 
-    @Secured({"ROLE_ADMINISTRADOR"})
-    @GetMapping("")
-    public String findAllBlog(Model model){
-        model.addAttribute("listBlog", blogServiceImpl.findAllBlog());
-        return  "views/auth/blog/blogList";
-    }
-
-
-    @GetMapping("/is-principal")
-    public String findAllBlogByIsPrincipal(Model model){
-        model.addAttribute("", "");
-        return "";
-    }
-    
-
-    @GetMapping("/specific/{id}")
-    public String findBlogById(@PathVariable("id") Long id, Model model){
-       model.addAttribute("blog",  blogServiceImpl.findBlogById(id));
-        return "";
-    }
-
-
-    @Secured({"ROLE_ADMINISTRADOR"})
-    @GetMapping("/created")
-    public String createdBlog(Blog blog, Model model ){
-        model.addAttribute("blog", blog);
-        return "views/auth/blog/blogForm";
-    }
-
-    @Secured({"ROLE_ADMINISTRADOR"})
-    @PostMapping("/save")
-    public String saveBlog(Blog blog, BindingResult result, Model model, @RequestParam("image") MultipartFile multipartFileBlog){
-
-
-        blog.setImage(multipartFileBlog.getOriginalFilename());
-
-        blog.setCreatedAt(new Date());
-
-
-        blogServiceImpl.saveBlog(blog);
-        return "views/auth/blog/blogList";
-    }
-
-    @Secured({"ROLE_ADMINISTRADOR"})
-    @PostMapping("/delete")
-    public String deleteBlogById(@RequestParam("id") Long id, Model model){
-        blogServiceImpl.deleteBlogById(id);
-        return "";
-    }
 }
