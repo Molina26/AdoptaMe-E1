@@ -15,7 +15,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item" aria-current="page">ADOPTAME</li>
                     <li class="breadcrumb-item" aria-current="page">NOTICIAS</li>
-                    <li class="breadcrumb-item active text-danger " aria-current="page">BLOG</li>
+                    <li class="breadcrumb-item active text-danger" aria-current="page">BLOG</li>
                 </ol>
             </nav>
         </div>
@@ -54,7 +54,7 @@
                                     <td> [[${#dates.format(item.createdAt, 'dd-MM-yyyy HH:MM')}]]</td>
                                     <td> [[${item.isPrincipal == true ? "Si" : "No"}]]</td>
                                     <td> [[${item.user.name}]]</td>
-                                    <td> <a href="#" class="btn btn-primary">Actualizar</a></td>
+                                    <td> <a th:href="@{/blog/find_update/{id} (id=${item.id})}" class="btn btn-primary">Actualizar</a> </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -65,9 +65,6 @@
             </div>
         </div>
     </div>
-
-
-
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

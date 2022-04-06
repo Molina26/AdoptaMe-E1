@@ -51,7 +51,7 @@ public class BlogController {
     }
 
 
-    @GetMapping("/management_list")
+    @GetMapping({"/management_list", ""})
     @Secured({"ROLE_ADMINISTRADOR"})
     public String findAllBlogManagement(@RequestParam(name="page", defaultValue = "0") int page, Model model){
             int itemsByPage = 5;
@@ -135,11 +135,11 @@ public class BlogController {
 
         if(blogExists.isPresent()){
 
-            BlogUpdateDto blogInfoDto = new BlogUpdateDto();
+           BlogUpdateDto blogInfoDto = new BlogUpdateDto();
             BeanUtils.copyProperties(blogExists.get() , blogInfoDto);
             model.addAttribute("blog", blogInfoDto);
 
-            return "views/blog/blogUpdateForm";
+            return "views/blog/blogFormUpdate";
         }
 
         info.setTitle("Blog no encontrado");
@@ -175,13 +175,41 @@ public class BlogController {
             return "redirect:/blog/management_list";
         }
 
+        Map<String, List<String>> validationsInUpdate = blogService.getValidationToUpdateBlog(blogUpdateDto);
 
+        if(!validationsInUpdate.isEmpty()){
+            model.addAttribute("errors",validationsInUpdate);
+            model.addAttribute("blog", blogUpdateDto);
 
+            return "views/blog/blogFormUpdate";
+        }
 
+        if(!imageF.isEmpty()){
+            String imageName = imageManager.insertImage(imageF);
 
+            if(imageName == null){
+                info.setTitle("Error de imagen al actualizar");
+                info.setMessage("Sucedio un error al intentar guardar la imagen");
+                info.setTypeToast("error");
 
+                model.addAttribute("fileError",MESSAGE_FILE_NOT_SELECTED);
+                model.addAttribute("info",info);
 
-        return "";
+                return "views/blog/blogFormUpdate";
+            }
+            blogUpdateDto.setImage(imageName);
+        }
+
+        boolean blogWasUpdated = blogService.updateBlog(blogUpdateDto);
+
+        if(blogWasUpdated){
+            info.setTitle("Blog actualizado");
+            info.setMessage("Se actualizó el blog ".concat(blogUpdateDto.getTitle()).concat(" correctamente"));
+            info.setTypeToast("success");
+            flash.addFlashAttribute("info", info);
+        }
+
+        return "redirect:/blog/management_list";
    }
 
 

@@ -24,11 +24,14 @@
     <div class="card" >
         <div th:insert="~{fragments/alert :: alerts}">
         </div>
-        <!-- <form th:action="@{/blog/save}" method="post" th:object="${blog}" enctype="multipart/form-data">
+       <form th:action="@{/blog/update}" method="post" th:object="${blog}" enctype="multipart/form-data">
+           <input type="hidden" th:field="*{id}" />
+           <input type="hidden" th:if="${blog.image != null}" th:field="*{image}" />
+
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-                        <h5 class="card-title">REGISTRAR BLOG</h5>
+                        <h5 class="card-title">ACTUALIZAR BLOG</h5>
                     </div>
                     <hr class="mt-2"/>
                 </div>
@@ -38,10 +41,10 @@
                         <label for="title" class="form-label">Titulo del Blog</label>
                         <input type="text" class="form-control" name="title" id="title" th:value="${blog.title}" placeholder="Titulo del Blog">
                         <div class="form-text text-danger" th:if="${errors != null && errors.get('title') != null}">
-                                    <span th:each="error: ${errors.get('title')}">
-                                        [[${error}]]
-                                        <br>
-                                    </span>
+                            <span th:each="error: ${errors.get('title')}">
+                                [[${error}]]
+                                <br>
+                            </span>
                         </div>
                     </div>
 
@@ -51,18 +54,18 @@
                         </div>
 
                         <div class="col-lg-12 mt-2">
-                            <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal1" th:field="*{principal}" th:value="true"  />
+                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal1" th:field="*{principal}" th:value="true"  />
                             <label class="form-check-label me-2 " for="isPrincipal1">Si</label>
 
-                            <input class="form-check-input" type="radio" name="isPrincipal" id="isPrincipal2"  th:field="*{principal}"  th:value="false" />
+                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal2"  th:field="*{principal}"  th:value="false" />
                             <label class="form-check-label" for="isPrincipal2">No</label>
 
                         </div>
-                        <div class="form-text text-danger" th:if="${errors != null && errors.get('isPrincipal') != null}">
-                                    <span th:each="error: ${errors.get('isPrincipal')}">
-                                        [[${error}]]
-                                        <br>
-                                    </span>
+                         <div class="form-text text-danger" th:if="${errors != null && errors.get('isPrincipal') != null}">
+                             <span th:each="error: ${errors.get('isPrincipal')}">
+                                 [[${error}]]
+                                 <br>
+                             </span>
                         </div>
                     </div>
                     <div class="col-12 mt-2">
@@ -72,7 +75,7 @@
                     </div>
                     <div class="col-12 mt-2">
                         <label for="content" class="form-label">Contenido</label>
-                        <textarea id="content" name="content" th:value="${blog.content}" ></textarea>
+                        <textarea id="content" name="content" th:value="${blog.content}"  th:utext="${blog.content}"></textarea>
                         <div class="form-text text-danger" th:if="${errors != null && errors.get('content') != null}">
                                     <span th:each="error: ${errors.get('content')}">
                                         [[${error}]]
@@ -81,17 +84,22 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-12 col-md-3 d-flex justify-content-center align-items-center">
+
+                    <img class="img-fluid border-2 border-dark" th:src="@{/uploads/{image}(image=${blog.image})}" alt=""  />
+                </div>
+
             </div>
             <div class="card-footer">
-
                 <div class="row mt-2">
                     <div class="col-lg-12 text-end">
-                        <a th:href="@{/blog}" class="btn btn-secondary">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                         <a th:href="@{/blog}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Actulizar</button>
                     </div>
                 </div>
             </div>
-        </form>-->
+        </form>
     </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}">
