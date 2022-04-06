@@ -3,7 +3,6 @@ package utez.edu.mx.adoptame.e1.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,7 @@ import java.util.*;
 @Service
 public class BlogServiceImpl implements BlogService{
 
-    @Autowired
-    private Validator validator;
+    private final Validator validator;
 
     private final BlogRepository blogRepository;
     private final MovementManagementServiceImpl movementManagementService;
@@ -35,12 +33,13 @@ public class BlogServiceImpl implements BlogService{
     private final Logger logger = LoggerFactory.getLogger(BlogServiceImpl.class);
 
 
-    public BlogServiceImpl (BlogRepository blogRepository, MovementManagementServiceImpl movementManagementService, InfoMovement infoMovement,
-                            UserAdoptameRepository userAdoptameRepository){
+    public BlogServiceImpl(BlogRepository blogRepository, MovementManagementServiceImpl movementManagementService, InfoMovement infoMovement,
+                           UserAdoptameRepository userAdoptameRepository, Validator validator){
         this.blogRepository = blogRepository;
         this.movementManagementService = movementManagementService;
         this.infoMovement = infoMovement;
         this.userAdoptameRepository = userAdoptameRepository;
+        this.validator = validator;
     }
 
     @Override
@@ -54,10 +53,7 @@ public class BlogServiceImpl implements BlogService{
     @Transactional(readOnly = true)
     public Optional<Blog> findBlogById(Long id) {
         Optional<Blog> blog = blogRepository.findById(id);
-        if(blog.isPresent()){
-            return blog;
-        }
-        return Optional.empty();
+        return blog;
     }
 
 
@@ -67,13 +63,17 @@ public class BlogServiceImpl implements BlogService{
 
         UserAdoptame user = userAdoptameRepository.findUserByUsername(username);
 
+        logger.info("BLOGDTO  "+ blogDto.toString());
         if(user != null){
             Blog blog = new Blog();
 
             BeanUtils.copyProperties(blogDto, blog);
-
+            blog.setIsPrincipal(blogDto.getPrincipal());
             blog.setImage(imageName);
             blog.setUser(user);
+            blog.setCreatedAt(new Date());
+
+            logger.info("INFOR BLOG BEFORE INSERT  " + blog.toString());
 
 
             try{
@@ -117,7 +117,7 @@ public class BlogServiceImpl implements BlogService{
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
-
+                logger.info("Error -->" + error.toString());
                 if(errors.get(key) != null){
                     errors.get(key).add(message);
                 }else{

@@ -29,7 +29,7 @@
                         <h5 class="card-title">BLOGS</h5>
                     </div>
                     <div class="col-6 text-end">
-                        <a th:href="@{/blog/created}" class="btn btn-primary">Registrar</a>
+                        <a th:href="@{/blog/create}" class="btn btn-primary">Registrar</a>
                     </div>
                     <hr class="mt-2"/>
                 </div>
@@ -40,29 +40,31 @@
                             <tr>
                                 <th>#</th>
                                 <th>Titulo</th>
-                                <th>Imagen</th>
                                 <th>Fecha de Creación</th>
+                                <th>¿Es principal?</th>
                                 <th>Autor</th>
                                 <th>Acciones</th>
                             </tr>
 
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1 </td>
-                                <td>titulo 1 </td>
-                                <td> Imagen</td>
-                                <td> Fecha</td>
-                                <td> Autor</td>
-                                <td> Acciones 	</td>
-                            </tr>
+                                <tr th:each="item, iter : ${listBlogs}">
+                                    <td> [[${index + (iter.index +1)}]]</td>
+                                    <td> [[${item.title}]]</td>
+                                    <td> [[${#dates.format(item.createdAt, 'dd-MM-yyyy HH:MM')}]]</td>
+                                    <td> [[${item.isPrincipal == true ? "Si" : "No"}]]</td>
+                                    <td> [[${item.user.name}]]</td>
+                                    <td> <a href="#" class="btn btn-primary">Actualizar</a></td>
+                                </tr>
                             </tbody>
                         </table>
+                        <div th:insert="~{fragments/paginator :: paginator}">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
 
 
 

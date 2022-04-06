@@ -1,7 +1,5 @@
 package utez.edu.mx.adoptame.e1.model.request.blog;
 
-
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -9,7 +7,7 @@ import javax.validation.constraints.Pattern;
 public class BlogInsertDto {
 
     @NotEmpty(message = "Debe de indicar el titulo del blog")
-    @Pattern(regexp = "[a-zA-Z ] {3,70}", message = "Valor no aceptado")
+    @Pattern(regexp = "[a-zA-Z ]{3,70}", message = "Valor no aceptado")
     private String title;
 
     @NotNull(message = "De de indicar si el blog es principal")
@@ -17,6 +15,7 @@ public class BlogInsertDto {
 
     @NotEmpty(message = "Debe de inidcar el contenido del blog")
     private String content;
+
 
     public String getTitle() {
         return title;
@@ -39,6 +38,16 @@ public class BlogInsertDto {
     }
 
     public void setPrincipal(Boolean principal) {
-        isPrincipal = principal;
+        this.isPrincipal = principal;
+    }
+
+
+    @Override
+    public String toString() {
+        return "BlogInsertDto{" +
+                "title='" + title + '\'' +
+                ", isPrincipal=" + isPrincipal +
+                ", content='" + content + '\'' +
+                '}';
     }
 }
