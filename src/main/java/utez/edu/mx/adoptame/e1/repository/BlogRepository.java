@@ -1,8 +1,10 @@
 package utez.edu.mx.adoptame.e1.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 import utez.edu.mx.adoptame.e1.entity.Blog;
 
-public interface BlogRepository extends JpaRepository<Blog,Long>{
+@Repository
+public interface BlogRepository extends PagingAndSortingRepository<Blog,Long> {
     
 }
