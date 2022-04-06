@@ -19,10 +19,6 @@ public class Blog {
     private Long id;
 
     @Column(name = "title", nullable = false, length = 70)
-    /*@NotBlank(message = "El Titulo no puede estar solo con espacios en blanco")
-    @NotEmpty(message = "El Titulo no puede estar vacío")
-    @Pattern(regexp = "^[A-Za-z0-9]*$", message = "No debe tener caracteres especiales")
-    @Size(min=2, max=70, message = "El nombre de la mascota no debe ser mayor a 50 caracteres")*/
     private String title;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")

@@ -14,7 +14,7 @@ public class Role {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "rol")
     private Set<UserAdoptame> users;
 
     public Long getId() {
