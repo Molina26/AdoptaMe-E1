@@ -10,11 +10,14 @@ import utez.edu.mx.adoptame.e1.entity.Blog;
 import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.BlogRepository;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
 
+import javax.swing.text.html.Option;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Validator;
@@ -102,8 +105,39 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public boolean updateBlog(Blog blog) {
-        return false;
+    public boolean updateBlog(BlogUpdateDto blogDto) {
+        boolean validUpdate = false;
+
+        Optional<Blog> blogDataRegistered =  blogRepository.findById(blogDto.getId());
+
+        if(blogDataRegistered.isPresent()){
+            try{
+                Blog blogUpdate = new Blog();
+                BeanUtils.copyProperties(blogDataRegistered.get(), blogUpdate);
+                BeanUtils.copyProperties(blogDto, blogUpdate);
+
+                Blog blogisUpdated = blogRepository.save(blogUpdate);
+
+                if(blogisUpdated.getId() != 0){
+                    validUpdate = true;
+
+                    MovementManagement movement = new MovementManagement();
+
+                    movement.setModuleName(infoMovement.getModuleName());
+                    movement.setUsername(infoMovement.getUsername());
+                    movement.setAction(infoMovement.getActionMovement());
+                    movement.setMovementDate(new Date());
+                    movement.setPreviousData(blogDataRegistered.get().toString());
+                    movement.setNewData(blogisUpdated.toString());
+                    movementManagementService.createOrUpdate(movement);
+                }
+
+            }catch (Exception e){
+                logger.error("error to update a blog");
+            }
+        }
+
+        return validUpdate;
     }
 
 
@@ -128,4 +162,32 @@ public class BlogServiceImpl implements BlogService{
         }
         return errors;
     }
+
+    public Map<String, List<String>> getValidationToUpdateBlog(BlogUpdateDto blogDto) {
+        Set<ConstraintViolation<BlogUpdateDto>> violations = validator.validate(blogDto);
+
+        Map<String, List<String>> errors = new HashMap<>();
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<BlogUpdateDto> error : violations) {
+
+                List<String> messages = new ArrayList<>();
+
+                Path path = error.getPropertyPath();
+                String key = path.toString();
+                String message = error.getMessage();
+
+                if (errors.get(key) != null) {
+                    errors.get(key).add(message);
+                } else {
+                    messages.add(message);
+                    errors.put(key, messages);
+                }
+            }
+        }
+        return errors;
+    }
+
+
+
 }

@@ -3,6 +3,7 @@ package utez.edu.mx.adoptame.e1.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import utez.edu.mx.adoptame.e1.entity.Blog;
+import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
+import utez.edu.mx.adoptame.e1.service.BlogService;
 import utez.edu.mx.adoptame.e1.service.BlogServiceImpl;
 import utez.edu.mx.adoptame.e1.util.ImageManager;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
@@ -129,9 +133,56 @@ public class BlogController {
         InfoToast info = new InfoToast();
         Optional<Blog> blogExists = blogService.findBlogById(id);
 
-        return "";
+        if(blogExists.isPresent()){
+
+            BlogUpdateDto blogInfoDto = new BlogUpdateDto();
+            BeanUtils.copyProperties(blogExists.get() , blogInfoDto);
+            model.addAttribute("blog", blogInfoDto);
+
+            return "views/blog/blogUpdateForm";
+        }
+
+        info.setTitle("Blog no encontrado");
+        info.setMessage("La información que busca no es valida");
+        info.setTypeToast("error");
+
+        flash.addFlashAttribute("info", info);
+
+        return "redirect:/blog/management_list";
     }
 
+    @PostMapping("/update")
+    @Secured({"ROLE_ADMINISTRADOR"})
+   public String updateBlog (BlogUpdateDto blogUpdateDto , Authentication auth,
+                      Model model,
+                      @RequestParam("imageF") MultipartFile imageF,
+                      RedirectAttributes flash){
+
+       InfoToast info = new InfoToast();
+
+       infoMovement.setActionMovement("UPDATE");
+       infoMovement.setUsername(auth.getName());
+       infoMovement.setModuleName(MODULE_NAME);
+
+       Optional<Blog> blogExists = blogService.findBlogById(blogUpdateDto.getId());
+
+        if (blogExists.isEmpty()) {
+            info.setTitle("Blog no valido");
+            info.setMessage("La información que busca no es valida");
+            info.setTypeToast("error");
+
+            flash.addFlashAttribute("info", info);
+            return "redirect:/blog/management_list";
+        }
+
+
+
+
+
+
+
+        return "";
+   }
 
 
 
