@@ -24,6 +24,7 @@
     <div class="card" >
         <div th:insert="~{fragments/alert :: alerts}">
         </div>
+
        <form th:action="@{/blog/update}" method="post" th:object="${blog}" enctype="multipart/form-data">
            <input type="hidden" th:field="*{id}" />
            <input type="hidden" th:if="${blog.image != null}" th:field="*{image}" />
@@ -54,10 +55,10 @@
                         </div>
 
                         <div class="col-lg-12 mt-2">
-                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal1" th:field="*{principal}" th:value="true"  />
+                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal1" th:field="*{isPrincipal}" th:value="true"  />
                             <label class="form-check-label me-2 " for="isPrincipal1">Si</label>
 
-                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal2"  th:field="*{principal}"  th:value="false" />
+                            <input class="form-check-input" type="radio" name="principal" id="isPrincipal2"  th:field="*{isPrincipal}"  th:value="false" />
                             <label class="form-check-label" for="isPrincipal2">No</label>
 
                         </div>
@@ -86,8 +87,9 @@
                 </div>
 
                 <div class="col-12 col-md-3 d-flex justify-content-center align-items-center">
-
-                    <img class="img-fluid border-2 border-dark" th:src="@{/uploads/{image}(image=${blog.image})}" alt=""  />
+                    <img class="img-info" id="img-info" th:src="@{/images/gato3.jpg}" height="200px"
+                         width="300px">
+                    <img class="img-info" th:src="@{/uploads/{image} (image=${blog.image})}" alt="45644"  height="100px" width="100px"/>
                 </div>
 
             </div>

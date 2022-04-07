@@ -6,26 +6,26 @@
     <title>Art.Design Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font awesome icon -->
-   
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/blog.css}">
 </head>
 
 <body>
-    <div th:insert="~{fragments/infoToast :: infoToast}">
-    </div>
-    <div th:replace="~{fragments/navigation :: navigation}">
+<div th:insert="~{fragments/infoToast :: infoToast}">
+</div>
+<div th:replace="~{fragments/navigation :: navigation}">
 
-    </div>
+</div>
 
-    <!-- header -->
+<!-- header -->
+<div th:each="item : ${blog}" class="mb-5">
     <header id="info2">
         <div class="banner">
             <div class="container">
                 <h1 class="banner-title">
-                    <span></span> Titulo Blog
+                    <span></span> [[${item.title}]]
                 </h1>
-                <p>Conoce sobre....</p>
             </div>
         </div>
     </header>
@@ -35,44 +35,32 @@
     <section class="design" id="design">
         <div class="container">
             <div class="title">
-                <h2>Recent Arts & Designs</h2>
-                <p>recent arts & designs on the blog</p>
+                <h2>Escrito por: [[${item.user.name}]] [[${item.user.firstLastname}]]
+                    [[${item.user.secondLastname}]]</h2>
+                <p>Fecha publicaciónn [[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]</p>
             </div>
 
-            <div>
                 <!-- item -->
-                <div>
-                    <div class="design-text-info">
-
-                        <p>Phasellus nec lacus leo. Nullam porttitor, nunc at rhoncus dignissim, nisl erat hendrerit nulla, non finibus diam lacus vitae ipsum. Suspendisse ac augue laoreet urna varius ullamcorper. Integer ut nisi vel arcu convallis luctus. Cras at varius dui. Proin molestie dui risus, quis suscipit enim dignissim vitae. Fusce mattis auctor auctor. Etiam at luctus turpis, ut rutrum ipsum. 
-                            Ut eget enim lacinia, suscipit turpis sed, pretium nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus nisi efficitur libero vestibulum dignissim. Vestibulum et libero eleifend, egestas odio sit amet, sodales lacus. Nam id arcu ut nisl semper blandit. Sed finibus luctus leo, eget posuere sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id eleifend augue. Proin mollis lacus et lorem tempor, vel suscipit neque iaculis. Nam congue gravida augue vel ultrices. Praesent bibendum varius felis et dignissim. Vivamus accumsan, nulla ac hendrerit aliquet, augue neque egestas velit, et dapibus urna lectus eu risus. Vivamus orci turpis, euismod et risus id, sodales tincidunt ligula. Vestibulum vel lacus tincidunt, suscipit tortor quis, eleifend neque. 
-                            Aenean vel lacus id sem ornare fringilla sed a nulla. Mauris tincidunt eleifend egestas. Nullam auctor bibendum libero efficitur vulputate.
-
-                            Phasellus nec lacus leo. Nullam porttitor, nunc at rhoncus dignissim, nisl erat hendrerit nulla, non finibus diam lacus vitae ipsum. Suspendisse ac augue laoreet urna varius ullamcorper. Integer ut nisi vel arcu convallis luctus. Cras at varius dui. Proin molestie dui risus, quis suscipit enim dignissim vitae. Fusce mattis auctor auctor. Etiam at luctus turpis, ut rutrum ipsum. 
-                            Ut eget enim lacinia, suscipit turpis sed, pretium nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus nisi efficitur libero vestibulum dignissim. Vestibulum et libero eleifend, egestas odio sit amet, sodales lacus. Nam id arcu ut nisl semper blandit. Sed finibus luctus leo, eget posuere sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id eleifend augue. Proin mollis lacus et lorem tempor, vel suscipit neque iaculis. Nam congue gravida augue vel ultrices. Praesent bibendum varius felis et dignissim. Vivamus accumsan, nulla ac hendrerit aliquet, augue neque egestas velit, et dapibus urna lectus eu risus. Vivamus orci turpis, euismod et risus id, sodales tincidunt ligula. Vestibulum vel lacus tincidunt, suscipit tortor quis, eleifend neque. 
-                            Aenean vel lacus id sem ornare fringilla sed a nulla. Mauris tincidunt eleifend egestas. Nullam auctor bibendum libero efficitur vulputate.
-
-                            Phasellus nec lacus leo. Nullam porttitor, nunc at rhoncus dignissim, nisl erat hendrerit nulla, non finibus diam lacus vitae ipsum. Suspendisse ac augue laoreet urna varius ullamcorper. Integer ut nisi vel arcu convallis luctus. Cras at varius dui. Proin molestie dui risus, quis suscipit enim dignissim vitae. Fusce mattis auctor auctor. Etiam at luctus turpis, ut rutrum ipsum. 
-                            Ut eget enim lacinia, suscipit turpis sed, pretium nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tempus nisi efficitur libero vestibulum dignissim. Vestibulum et libero eleifend, egestas odio sit amet, sodales lacus. Nam id arcu ut nisl semper blandit. Sed finibus luctus leo, eget posuere sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed id eleifend augue. Proin mollis lacus et lorem tempor, vel suscipit neque iaculis. Nam congue gravida augue vel ultrices. Praesent bibendum varius felis et dignissim. Vivamus accumsan, nulla ac hendrerit aliquet, augue neque egestas velit, et dapibus urna lectus eu risus. Vivamus orci turpis, euismod et risus id, sodales tincidunt ligula. Vestibulum vel lacus tincidunt, suscipit tortor quis, eleifend neque. 
-                            Aenean vel lacus id sem ornare fringilla sed a nulla. Mauris tincidunt eleifend egestas. Nullam auctor bibendum libero efficitur vulputate.
-                        </p>
-
+                <div class="row">
+                    <div class="col-4 align-content-center">
+                        <img class="img-info" id="img-info"  th:src="@{/uploads/{image} (image=${item.image})}"  height="200px"
+                             width="300px">
                     </div>
-                    <div>
-                        <img class="img-info" id="img-info" th:src="@{/images/gato3.jpg}"  height="500px" width="700px">
 
+                    <div class="design-text-info col-8">
+                        <p th:utext="${item.content}"></p>
                     </div>
                 </div>
                 <!-- end of item -->
-
-
+            <div class="row mt-5">
+                <div class="col-12 text-end">
+                    <a th:href="@{/blog/general}" class="btn btn-primary">Regresar</a>
+                </div>
             </div>
         </div>
     </section>
     <!-- end of design -->
+</div>
 
 </body>
 

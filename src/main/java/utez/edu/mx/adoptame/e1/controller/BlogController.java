@@ -43,6 +43,7 @@ public class BlogController {
 
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
 
+    private final String VOWELS_AND_SPACE[] = {" ","Á","á", "é", "É", "í", "Í", "ó", "Ó", "ú", "Ú", "%"};
 
     public BlogController(BlogServiceImpl blogService, ImageManager imageManager,InfoMovement infoMovement){
         this.blogService = blogService;
@@ -56,11 +57,8 @@ public class BlogController {
     public String findAllBlogManagement(@RequestParam(name="page", defaultValue = "0") int page, Model model){
             int itemsByPage = 5;
         Pageable pageRequest = PageRequest.of(page, itemsByPage);
-
         Page<Blog> blogs = blogService.findAllBlog(pageRequest);
-
         PageRender<Blog> pageRender = new PageRender<>("/blog/management_list", blogs);
-
         model.addAttribute("listBlogs", blogs);
         model.addAttribute("page", pageRender);
         model.addAttribute("index", (itemsByPage * page));
@@ -72,9 +70,7 @@ public class BlogController {
     @GetMapping("/create")
     @Secured({"ROLE_ADMINISTRADOR"})
     public String createBlog(Model model){
-
         model.addAttribute("blog", new BlogInsertDto());
-
         return "views/blog/blogForm";
     }
 
@@ -85,6 +81,7 @@ public class BlogController {
         InfoToast info = new InfoToast();
 
         Map<String, List<String>> validation = blogService.getValidationInsertBlog(blog);
+
 
         infoMovement.setActionMovement("INSERT");
         infoMovement.setUsername(auth.getName());
@@ -99,11 +96,19 @@ public class BlogController {
         }
 
         if(!image.isEmpty()){
-            String imageName = imageManager.insertImage(image);
+
+            boolean errorInsertImage = false;
+
+            for (int i = 0; i < VOWELS_AND_SPACE.length; i++) {
+                if(image.getOriginalFilename().contains(VOWELS_AND_SPACE[i])){
+                    errorInsertImage = true;
+                }
+            }
+            String imageName = (errorInsertImage ? null : imageManager.insertImage(image));
 
             if(imageName == null){
                 info.setTitle("Error de imagen al guardar");
-                info.setMessage("Secedio un error al intentar guardar la imagen");
+                info.setMessage("Sucedió un error al intentar guardar la imagen, revisar nombre del archivo");
                 info.setTypeToast("error");
 
                 model.addAttribute("fileError", MESSAGE_FILE_NOT_SELECTED);
@@ -116,13 +121,53 @@ public class BlogController {
 
             if(blogWasInserted){
                 info.setTitle("Blog registrado");
-                info.setMessage("Se registro a ".concat(blog.getTitle()).concat( " correctamente"));
+                info.setMessage("Se registro a ".concat(blog.getTitle()).concat( "correctamente"));
                 info.setTypeToast("success");
                 flash.addFlashAttribute("info",info);
             }
         }
 
         return "redirect:/blog/management_list";
+
+    }
+
+
+    @GetMapping("/general")
+    public String sectionGeneralBlog(@RequestParam (name="page", defaultValue = "0") int page, Model model){
+            int itemsByPage = 6;
+            Pageable pageRequest = PageRequest.of(page, itemsByPage);
+            Page<Blog> blogs = blogService.findAllBlog(pageRequest);
+
+            PageRender<Blog> pageRender = new PageRender<>("/blog/blog", blogs);
+
+            model.addAttribute("listBlogs", blogs);
+            model.addAttribute("page", pageRender);
+            model.addAttribute("index", (itemsByPage * page));
+
+            return "views/blog/blog";
+    }
+
+    @GetMapping("/find_details_blog/{id}")
+    public String sectionGeneralBlogDetails(@PathVariable("id") Long id, Model model, RedirectAttributes flash){
+
+        InfoToast info = new InfoToast();
+        Optional<Blog> blogExists = blogService.findBlogById(id);
+
+        if(blogExists.isPresent()){
+
+                logger.info("Blog  "+ blogExists.toString());
+            model.addAttribute("blog", blogExists.get());
+
+            return "views/blog/detailBlog";
+        }
+
+        info.setTitle("Blog no encontrado");
+        info.setMessage("La información que busca no es valida");
+        info.setTypeToast("error");
+
+        flash.addFlashAttribute("info", info);
+
+        return "redirect:/blog/blog";
 
     }
 
@@ -135,9 +180,9 @@ public class BlogController {
 
         if(blogExists.isPresent()){
 
-           BlogUpdateDto blogInfoDto = new BlogUpdateDto();
-            BeanUtils.copyProperties(blogExists.get() , blogInfoDto);
-            model.addAttribute("blog", blogInfoDto);
+         /*  BlogUpdateDto blogInfoDto = new BlogUpdateDto();
+            BeanUtils.copyProperties(blogExists.get() , blogInfoDto);*/
+            model.addAttribute("blog", blogExists.get());
 
             return "views/blog/blogFormUpdate";
         }
@@ -153,7 +198,7 @@ public class BlogController {
 
     @PostMapping("/update")
     @Secured({"ROLE_ADMINISTRADOR"})
-   public String updateBlog (BlogUpdateDto blogUpdateDto , Authentication auth,
+    public String updateBlog (BlogUpdateDto blogUpdateDto , Authentication auth,
                       Model model,
                       @RequestParam("imageF") MultipartFile imageF,
                       RedirectAttributes flash){
