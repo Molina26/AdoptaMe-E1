@@ -22,19 +22,24 @@
             <div class="form-container sign-up-container">
                 <form action="#">
                     <h1 class="h1sing">Crear Cuenta</h1>
+                    <label class="label">Nombre</label>
                     <input type="text" name="name" placeholder="Nombre" />
+                    <label class="label">Primer apellido</label>
                     <input type="text" name="first_lastname" placeholder="Primer apellido" />
+                    <label class="label">Segundo apellido</label>
                     <input type="text" name="second_lastname" placeholder="Segundo apellido" />
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" name="username" placeholder="Usuario" />
-                        </div>
-                        <select name="rol">
-                            <option value="">Selecciona</option>
-                        </select>
+                    <label class="label">Soy...</label>
+                    <div>
+                        <label class="radio" for="inlineRadio1"><input class="form-check-input" type="radio" name="rol"
+                                value="adoptador">Adoptador</label>
+                        <label class="radio" for="inlineRadio2"><input class="form-check-input" type="radio" name="rol"
+                                value="option2">Voluntario</label>
                     </div>
+                    <label class="label">Correo electrónico</label>
                     <input type="email" name="email" placeholder="Email" />
+                    <label class="label">Contraseña</label>
                     <input type="password" name="password" placeholder="Contraseña" />
+                    <label class="label">Confirmar contraseña</label>
                     <input type="password" name="password" placeholder="Confirmar Contraseña" />
                     <button>Registrar</button>
                 </form>
