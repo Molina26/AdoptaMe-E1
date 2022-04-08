@@ -55,7 +55,7 @@ public class BlogController {
     @GetMapping({"/management_list", ""})
     @Secured({"ROLE_ADMINISTRADOR"})
     public String findAllBlogManagement(@RequestParam(name="page", defaultValue = "0") int page, Model model){
-            int itemsByPage = 5;
+        int itemsByPage = 5;
         Pageable pageRequest = PageRequest.of(page, itemsByPage);
         Page<Blog> blogs = blogService.findAllBlog(pageRequest);
         PageRender<Blog> pageRender = new PageRender<>("/blog/management_list", blogs);
@@ -98,12 +98,18 @@ public class BlogController {
         if(!image.isEmpty()){
 
             boolean errorInsertImage = false;
+            String imageNameP  = image.getOriginalFilename()+"";
 
             for (int i = 0; i < VOWELS_AND_SPACE.length; i++) {
-                if(image.getOriginalFilename().contains(VOWELS_AND_SPACE[i])){
-                    errorInsertImage = true;
+                if(image.getSize()== 0 || image == null ){
+                    break;
+                }else {
+                    if(imageNameP.contains(VOWELS_AND_SPACE[i])){
+                        errorInsertImage = true;
+                    }
                 }
             }
+
             String imageName = (errorInsertImage ? null : imageManager.insertImage(image));
 
             if(imageName == null){
@@ -117,7 +123,7 @@ public class BlogController {
                 return "views/blog/blogForm";
             }
 
-        boolean blogWasInserted = blogService.saveBlog(blog, imageName, auth.getName());
+            boolean blogWasInserted = blogService.saveBlog(blog, imageName, auth.getName());
 
             if(blogWasInserted){
                 info.setTitle("Blog registrado");
@@ -134,17 +140,17 @@ public class BlogController {
 
     @GetMapping("/general")
     public String sectionGeneralBlog(@RequestParam (name="page", defaultValue = "0") int page, Model model){
-            int itemsByPage = 6;
-            Pageable pageRequest = PageRequest.of(page, itemsByPage);
-            Page<Blog> blogs = blogService.findAllBlog(pageRequest);
+        int itemsByPage = 6;
+        Pageable pageRequest = PageRequest.of(page, itemsByPage);
+        Page<Blog> blogs = blogService.findAllBlog(pageRequest);
 
-            PageRender<Blog> pageRender = new PageRender<>("/blog/blog", blogs);
+        PageRender<Blog> pageRender = new PageRender<>("/blog/blog", blogs);
 
-            model.addAttribute("listBlogs", blogs);
-            model.addAttribute("page", pageRender);
-            model.addAttribute("index", (itemsByPage * page));
+        model.addAttribute("listBlogs", blogs);
+        model.addAttribute("page", pageRender);
+        model.addAttribute("index", (itemsByPage * page));
 
-            return "views/blog/blog";
+        return "views/blog/blog";
     }
 
     @GetMapping("/find_details_blog/{id}")
@@ -155,7 +161,7 @@ public class BlogController {
 
         if(blogExists.isPresent()){
 
-                logger.info("Blog  "+ blogExists.toString());
+            logger.info("Blog  "+ blogExists.toString());
             model.addAttribute("blog", blogExists.get());
 
             return "views/blog/detailBlog";
@@ -199,17 +205,17 @@ public class BlogController {
     @PostMapping("/update")
     @Secured({"ROLE_ADMINISTRADOR"})
     public String updateBlog (BlogUpdateDto blogUpdateDto , Authentication auth,
-                      Model model,
-                      @RequestParam("imageF") MultipartFile imageF,
-                      RedirectAttributes flash){
+                              Model model,
+                              @RequestParam("imageF") MultipartFile imageF,
+                              RedirectAttributes flash){
 
-       InfoToast info = new InfoToast();
+        InfoToast info = new InfoToast();
 
-       infoMovement.setActionMovement("UPDATE");
-       infoMovement.setUsername(auth.getName());
-       infoMovement.setModuleName(MODULE_NAME);
+        infoMovement.setActionMovement("UPDATE");
+        infoMovement.setUsername(auth.getName());
+        infoMovement.setModuleName(MODULE_NAME);
 
-       Optional<Blog> blogExists = blogService.findBlogById(blogUpdateDto.getId());
+        Optional<Blog> blogExists = blogService.findBlogById(blogUpdateDto.getId());
 
         if (blogExists.isEmpty()) {
             info.setTitle("Blog no valido");
@@ -255,7 +261,7 @@ public class BlogController {
         }
 
         return "redirect:/blog/management_list";
-   }
+    }
 
 
 
