@@ -296,4 +296,21 @@ public class PetController {
             this.listSizes = sizeService.findAllSizes();
         }
     }
+
+    /*Success donation*/
+    @GetMapping("/successdonation")
+    public String successdonation(){
+
+        return "views/successDonation";
+
+    }
+
+    /*Modal Error */
+    @GetMapping("/errormodal")
+    public String errorModal(){
+
+        return "views/incorrectDonation";
+
+    }
+
 }
