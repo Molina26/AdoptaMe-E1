@@ -11,9 +11,9 @@
     <div th:insert="~{fragments/infoToast :: infoToast}">
     </div>
 
-    <div th:replace="~{fragments/navigation :: navigation}">
+<!--    <div th:replace="~{fragments/navigation :: navigation}">-->
 
-    </div>
+<!--    </div>-->
 
     <main>
 
@@ -41,9 +41,12 @@
             </div>
             <!--Inicio de sesion perro-->
             <div class="form-container sign-in-container">
+
                 <form th:action="@{/login}" method="post">
                     <div class="ear ear--left"></div>
                     <div class="ear ear--right"></div>
+                    <div th:insert="~{fragments/alert :: alerts}">
+                    </div>
                     <div class="face">
                         <div class="eyes">
                             <div class="eye eye--left">
@@ -123,6 +126,7 @@
                         </div>
                     </div>
                 </form>
+
             </div>
             <!--lado perro pelota-->
             <div class="overlay-container">

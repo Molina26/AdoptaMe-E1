@@ -14,8 +14,8 @@ public class AdoptionApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "state", nullable = false)
-    private Boolean state;
+    @Column(name = "state", nullable = false, columnDefinition = "ENUM('pendiente','aceptada', 'rechazada')")
+    private String state;
 
     @Column(name = "application_date", nullable = false)
     private Date applicationDate;

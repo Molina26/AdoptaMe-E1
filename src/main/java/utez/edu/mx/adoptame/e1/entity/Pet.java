@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "pet")
@@ -49,6 +51,9 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "personality_id", nullable = false)
     private Personality personality;
+
+    @ManyToMany(mappedBy = "favoritesPets")
+    private Set<UserAdoptame> users;
 
     @Override
     public String toString() {

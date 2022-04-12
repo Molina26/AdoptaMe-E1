@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import utez.edu.mx.adoptame.e1.handler.CustomLoginSuccessHandler;
 import utez.edu.mx.adoptame.e1.handler.CustomLogoutSuccessHandler;
 import utez.edu.mx.adoptame.e1.util.AppProperties;
+import utez.edu.mx.adoptame.e1.util.GeneralInfoApp;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
 
 import java.nio.file.Paths;
@@ -40,6 +41,9 @@ public class MvcConfig implements WebMvcConfigurer {
     public static InfoMovement getInfoMovement() {
         return new InfoMovement();
     }
+
+    @Bean
+    public static GeneralInfoApp getGeneralInfoApp() { return new GeneralInfoApp();}
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {

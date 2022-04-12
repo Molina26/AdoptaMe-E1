@@ -15,10 +15,10 @@
                     </li>
                     <div sec:authorize="!isAuthenticated() || hasRole('ROLE_ADOPTADOR')" class="d-flex">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Perros</a>
+                            <a class="nav-link text-white" th:href="@{/pets/adopt/perro}">Perros</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Gatos</a>
+                            <a class="nav-link text-white" th:href="@{/pets/adopt/gato}">Gatos</a>
                         </li>
                     </div>
                     <div sec:authorize="isAuthenticated() && !hasRole('ROLE_ADOPTADOR')">
@@ -28,7 +28,7 @@
                     </div>
                     <div sec:authorize="isAuthenticated() && !hasRole('ROLE_ADMINISTRADOR')">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="">Solicitudes de adopción</a>
+                            <a class="nav-link text-white" th:href="@{/adoptions/list}">Solicitudes de adopción</a>
                         </li>
                     </div>
                     <li class="nav-item">

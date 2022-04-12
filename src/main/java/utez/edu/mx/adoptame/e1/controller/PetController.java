@@ -6,9 +6,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,7 @@ import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.entity.Size;
 import utez.edu.mx.adoptame.e1.enums.TracingRegisterPet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetSearchDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
@@ -28,9 +29,7 @@ import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
 import utez.edu.mx.adoptame.e1.service.PersonalityServiceImpl;
 import utez.edu.mx.adoptame.e1.service.PetServiceImpl;
 import utez.edu.mx.adoptame.e1.service.SizeServiceImpl;
-import utez.edu.mx.adoptame.e1.util.ImageManager;
-import utez.edu.mx.adoptame.e1.util.InfoMovement;
-import utez.edu.mx.adoptame.e1.util.PageRender;
+import utez.edu.mx.adoptame.e1.util.*;
 import utez.edu.mx.adoptame.e1.service.ColorServiceImpl;
 
 import java.util.ArrayList;
@@ -54,6 +53,8 @@ public class PetController {
 
     private final InfoMovement infoMovement;
 
+    private final GeneralInfoApp generalInfoApp;
+
     private final Logger logger = LoggerFactory.getLogger(PetController.class);
 
     private List<Color> listColors = new ArrayList<>();
@@ -73,25 +74,87 @@ public class PetController {
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
 
     public PetController(PetServiceImpl petService,
-            ColorServiceImpl colorService,
-            PersonalityServiceImpl personalityService,
-            SizeServiceImpl sizeService,
-            ImageManager imageManager,
-            InfoMovement infoMovement) {
+                        ColorServiceImpl colorService,
+                        PersonalityServiceImpl personalityService,
+                        SizeServiceImpl sizeService,
+                        ImageManager imageManager,
+                        InfoMovement infoMovement,
+                        GeneralInfoApp generalInfoApp) {
         this.petService = petService;
         this.colorService = colorService;
         this.personalityService = personalityService;
         this.sizeService = sizeService;
         this.imageManager = imageManager;
         this.infoMovement = infoMovement;
+        this.generalInfoApp = generalInfoApp;
         this.definePetsInfoLists();
+    }
+
+    @GetMapping({ "/adopt/{type}", "/adopt" })
+    public String findPetToAdopt(@PathVariable(name = "type") String type,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
+        this.definePetsInfoLists();
+        generalInfoApp.setTypePet(type);
+
+        int itemsByPage = 6;
+        Pageable pageRequest = PageRequest.of(page, itemsByPage, Sort.by("createdAt").descending());
+
+        String valueTracingToSearch = TracingRegisterPet.aceptado.toString();
+
+        Page<Pet> pets = petService.findPetsToAdopt(type, valueTracingToSearch, pageRequest);
+
+        PageRender<Pet> pageRender = new PageRender<>("/pets/adopt/".concat(type), pets);
+
+        PetSearchDto petSearchDto = new PetSearchDto();
+        petSearchDto.setTypePet(type);
+
+        model.addAttribute("listPets", pets);
+        model.addAttribute("page", pageRender);
+        model.addAttribute(LIST_COLORS_NAME, this.listColors);
+        model.addAttribute(LIST_PERSONALITIES_NAME, this.listPersonalities);
+        model.addAttribute(LIST_SIZES_NAME, this.listSizes);
+        model.addAttribute("search", petSearchDto);
+        model.addAttribute("typePet", generalInfoApp.getTypePet());
+
+        return "views/pet/lista";
+    }
+
+    @GetMapping("/filter")
+    public String filterPets(PetSearchDto pet,
+                             @RequestParam(name = "page", defaultValue = "0") int page,
+                             Model model) {
+
+        int itemsByPageSearch = 6;
+
+        Pageable pageRequest = PageRequest.of(page, itemsByPageSearch, Sort.by("createdAt").descending());
+
+        if (pet.getTypePet() == null ) {
+            pet.setTypePet(generalInfoApp.getTypePet());
+        }
+
+        Page<Pet> pets = petService.findPetsByColorSizeOrPersonality(pet, pageRequest);
+
+        String pathToSerch = "?typePet="+pet.getTypePet()+"&colorId="+pet.getColorId()+"&sizeId="+pet.getSizeId()+"&personalityId="+pet.getPersonalityId();
+
+        PageRender<Pet> pageRender = new PageRender<>("/pets/filter".concat(pathToSerch), pets);
+
+        model.addAttribute(LIST_COLORS_NAME, this.listColors);
+        model.addAttribute(LIST_PERSONALITIES_NAME, this.listPersonalities);
+        model.addAttribute(LIST_SIZES_NAME, this.listSizes);
+        model.addAttribute("listPets", pets);
+        model.addAttribute("page", pageRender);
+        model.addAttribute("typePet", generalInfoApp.getTypePet());
+        model.addAttribute("search", pet);
+
+        return "views/pet/lista";
     }
 
     @GetMapping("/management_list")
     @Secured({ "ROLE_ADMINISTRADOR", "ROLE_VOLUNTARIO" })
     public String findListPetsManagement(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         int itemsByPage = 5;
-        Pageable pageRequest = PageRequest.of(page, itemsByPage);
+        Pageable pageRequest = PageRequest.of(page, itemsByPage, Sort.by("createdAt").descending());
 
         Page<Pet> pets = petService.findAll(pageRequest);
 
@@ -100,7 +163,6 @@ public class PetController {
         model.addAttribute("listPets", pets);
         model.addAttribute("page", pageRender);
         model.addAttribute("index", (itemsByPage * page));
-
         return "views/pet/listTablePets";
     }
 
@@ -147,8 +209,8 @@ public class PetController {
             if (imageName == null) {
 
                 info.setTitle("Error de imagen al guardar");
-                info.setMessage("Sucedio un error al intentar guardar la imagen");
                 info.setTypeToast("error");
+                info.setMessage("Sucedio un error al intentar guardar la imagen");
 
                 model.addAttribute(LIST_COLORS_NAME, this.listColors);
                 model.addAttribute(LIST_PERSONALITIES_NAME, this.listPersonalities);
@@ -280,7 +342,7 @@ public class PetController {
             RedirectAttributes flash) {
 
         InfoToast info = new InfoToast();
-        boolean isAdmin = false;
+
 
         Optional<Pet> petExisted = petService.findPetById(id);
 
@@ -288,11 +350,7 @@ public class PetController {
 
             model.addAttribute("pet", petExisted.get());
 
-            for (GrantedAuthority authority : auth.getAuthorities()) {
-                if (authority.getAuthority().equals("ROLE_ADMINISTRADOR")) {
-                    isAdmin = true;
-                }
-            }
+            boolean isAdmin = ValidationCredentials.validateCredential(auth.getAuthorities(), "ROLE_ADMINISTRADOR");
 
             if (isAdmin) {
                 PetTracingRegisterDto petDto = new PetTracingRegisterDto();

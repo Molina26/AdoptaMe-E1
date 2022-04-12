@@ -35,6 +35,15 @@ public class UserAdoptame {
 
     @ManyToMany
     @JoinTable(
+            name = "favorites_pets_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id")
+
+    )
+    private Set<Pet> favoritesPets = new HashSet<Pet>();
+
+    @ManyToMany
+    @JoinTable(
             name = "authorities",
             joinColumns = @JoinColumn(name = "username"),
             inverseJoinColumns = @JoinColumn(name = "authority")
@@ -111,5 +120,13 @@ public class UserAdoptame {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Pet> getFavoritesPets() {
+        return favoritesPets;
+    }
+
+    public void setFavoritesPets(Set<Pet> favoritesPets) {
+        this.favoritesPets = favoritesPets;
     }
 }

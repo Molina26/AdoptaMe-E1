@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.pet.PetSearchDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.PetRepository;
@@ -53,6 +54,24 @@ public class PetServiceImpl implements PetService {
     @Transactional(readOnly = true)
     public Page<Pet> findAll(Pageable pageable) {
         return petRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Pet> findPetsToAdopt(String type, String isAccepted, Pageable pageable) {
+        return petRepository.findAllByAvailableAdoptionAndTypeAndIsAccepted(true, type, isAccepted, pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Pet> findPetsByColorSizeOrPersonality(PetSearchDto petSearchDto, Pageable pageable) {
+
+        String typePet = petSearchDto.getTypePet();
+        Long colorId = petSearchDto.getColorId();
+        Long sizeId = petSearchDto.getSizeId();
+        Long personalityId = petSearchDto.getPersonalityId();
+
+        return petRepository.findPetsByColorSizeOrPersonalityToAdopt(typePet, colorId, sizeId, personalityId, pageable);
     }
 
     @Override
@@ -166,6 +185,44 @@ public class PetServiceImpl implements PetService {
                 logger.error("error to accepted a pet");
             }
         }
+        return flag;
+    }
+
+    @Override
+    public boolean changeAvailableAdoptionPet(Long id, Boolean availableAdoptionPet) {
+        boolean flag = false;
+
+        Optional<Pet> petExisted = petRepository.findById(id);
+
+        if (petExisted.isPresent()) {
+            try {
+                int isRowAffected = petRepository.changeAvailableAdoptionPet(id, availableAdoptionPet);
+
+                if (isRowAffected == 1) {
+                    Optional<Pet> petUpdated = petRepository.findById(id);
+
+                    flag = true;
+
+                    if (petUpdated.isPresent()) {
+                        MovementManagement movement = new MovementManagement();
+
+                        movement.setModuleName(infoMovement.getModuleName());
+                        movement.setUsername(infoMovement.getUsername());
+                        movement.setAction(infoMovement.getActionMovement());
+                        movement.setMovementDate(new Date());
+                        movement.setPreviousData(petExisted.get().toString());
+                        movement.setNewData(petUpdated.get().toString());
+
+                        movementManagementService.createOrUpdate(movement);
+
+                    }
+                }
+            } catch (Exception ex) {
+                logger.error("error to change available adoption pet");
+            }
+        }
+
+
         return flag;
     }
 

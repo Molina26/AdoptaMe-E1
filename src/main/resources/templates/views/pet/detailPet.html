@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <header th:replace="~{fragments/head :: head}">
 </header>
 
@@ -17,61 +18,8 @@
                 <img class="img-fluid border-2 border-dark" th:src="@{/uploads/{image}(image=${pet.image})}" alt="" />
             </div>
             <div class="col-12 col-md-8 border border-3 border-dark rounded p-2">
-                <h4>Información general</h4>
-                <div th:object="${pet}" class="row mt-3 px-5">
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Nombre</p>
-                        <p>
-                            [[*{name}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Edad</p>
-                        <p>
-                            [[*{age}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Tipo de mascota</p>
-                        <p class="text-capitalize">
-                            [[*{type}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Sexo de la mascota</p>
-                        <p class="text-capitalize">
-                            [[*{sex}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Color</p>
-                        <p>
-                            [[*{color.name}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Tamaño</p>
-                        <p>
-                            [[*{size.name}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Carácter</p>
-                        <p>
-                            [[*{personality.name}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Disponible para adopción</p>
-                        <p>
-                            [[${pet.availableAdoption ? 'Disponible' : 'No disponible'}]]
-                        </p>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mb-2">
-                        <p class="fw-bold">Disponible para adopción</p>
-                        <p class="text-capitalize">
-                            [[*{isAccepted}]]
-                        </p>
+                    <div th:insert="~{fragments/infoPet :: infoPet}">
+
                     </div>
                     <div class="col-12 mt-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:insert="~{fragments/formTracingPet :: petTracingForm}">
 

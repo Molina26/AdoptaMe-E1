@@ -1,5 +1,6 @@
 package utez.edu.mx.adoptame.e1.model.request.pet;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -13,6 +14,7 @@ public class PetTracingRegisterDto {
   private Long id;
 
   @ValueOfEnumAccepted(enumClass = TracingRegisterPet.class, message = "Este tipo de mascota no es aceptado")
+  @NotEmpty(message = "Debe de indicar un valor para esta propiedad")
   private String isAccepted;
 
   public Long getId() {
