@@ -1,20 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-
-<header th:insert="~{fragments/head :: head}">
-
-</header>
-
+<header th:insert="~{fragments/head :: head}"></header>
 <body>
+    <div th:insert="~{fragments/infoToast :: infoToast}"> </div>
+    
     <input type="hidden" th:value="${login}">
-    <div th:insert="~{fragments/infoToast :: infoToast}">
-    </div>
-
-    <div th:replace="~{fragments/navigation :: navigation}">
-
-    </div>
-
     <main>
 
         <div class="container" id="container">
@@ -131,7 +121,6 @@
                         <div class="dog">
                             <div class="dog-body">
                                 <div class="dog-tail">
-                                    >>>>>>> 43ab651fb730877c28d2ae0bdd6903f0913cf2b6
                                     <div class="dog-tail">
                                         <div class="dog-tail">
                                             <div class="dog-tail">

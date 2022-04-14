@@ -1,8 +1,6 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<header th:replace="~{fragments/head :: head}">
-
-</header>
+    <header th:insert="~{fragments/headBlog :: head}"></header>
 
 <body>
     <div th:insert="~{fragments/infoToast :: infoToast}"></div>
@@ -29,7 +27,7 @@
                         <h5 class="card-title">BLOGS</h5>
                     </div>
                     <div class="col-6 text-end">
-                        <a th:href="@{/blog/create}" class="btn btn-primary">Registrar</a>
+                        <a th:href="@{/blog/create}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Registrar</span></a>
                     </div>
                     <hr class="mt-2"/>
                 </div>
@@ -42,21 +40,23 @@
                             <tr>
                                 <th>#</th>
                                 <th>Titulo</th>
-                                <th>Fecha de Creación</th>
+                                <th><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Fecha de Creación</span></th>
                                 <th>¿Es principal?</th>
                                 <th>Autor</th>
-                                <th>Acciones</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
 
                             </thead>
                             <tbody>
                                 <tr th:each="item, iter : ${listBlogs}">
                                     <td> [[${index + (iter.index +1)}]]</td>
-                                    <td> [[${item.title}]]</td>
-                                    <td> [[${#dates.format(item.createdAt, 'dd-MM-yyyy HH:MM')}]]</td>
+                                    <td> [[${item.title.length > 25 ? item.title.substring(0,25)+".." : item.title}]]</td>
+                                    <td><span class=" d-none d-sm-none d-md-none d-lg-inline d-xl-inline">[[${#dates.format(item.createdAt, 'dd-MM-yyyy HH:MM')}]]</span> </td>
                                     <td> [[${item.isPrincipal == true ? "Si" : "No"}]]</td>
                                     <td> [[${item.user.name}]]</td>
-                                    <td> <a th:href="@{/blog/find_update/{id} (id=${item.id})}" class="btn btn-primary">Actualizar</a> </td>
+                                    <td class="text-end"> <a th:href="@{/blog/find_update/{id}/true (id=${item.id})}" class="btn btn-primary"><i class="bi bi-pencil-square"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Actualizar</span></a>
+                                        <a th:href="@{/blog/managment/details/{id}/false (id=${item.id})}" class="btn btn-primary"><i class="bi bi-eye"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Detalles</span></a> </td>
+                                    
                                 </tr>
                             </tbody>
                         </table>
@@ -67,6 +67,6 @@
             </div>
         </div>
     </div>
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/footerBlog :: footer}"></div>
 </body>
 </html>

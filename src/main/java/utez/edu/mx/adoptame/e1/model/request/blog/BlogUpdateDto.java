@@ -21,7 +21,7 @@ public class BlogUpdateDto {
     @NotEmpty(message = "Debe de inidcar el contenido del blog")
     private String content;
 
-    @NotEmpty(message = "El nombre de la imagen no debe estar vacio")
+  
     private String image;
 
     public Long getId() {
@@ -63,4 +63,12 @@ public class BlogUpdateDto {
     public void setImage(String image) {
         this.image = image;
     }
+
+    @Override
+    public String toString() {
+        return "BlogUpdateDto [content=" + content + ", id=" + id + ", image=" + image + ", isPrincipal=" + isPrincipal
+                + ", title=" + title + "]";
+    }
+
+    
 }

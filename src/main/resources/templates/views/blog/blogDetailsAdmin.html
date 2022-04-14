@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <header th:insert="~{fragments/headBlog :: head}"></header>
+<body>
+    <div th:insert="~{fragments/infoToast :: infoToast}"></div>
+    <div th:replace="~{fragments/navigation :: navigation}"></div>
+    
+    <div class="container" th:each="item : ${blog}">
+        <div class="row">
+            <div class="col-12 mt-2">
+                <h2 class="text-center" th:text="${item.title}"></h2>
+            </div>
+            <div class="col-12 mt-2">
+                <h4 class="text-center" th:text="'Autor: ' + ${item.user.name} + ' ' + ${item.user.firstLastname} + ' ' +${item.user.secondLastname}"></h2>
+            </div>
+            <div class="col-12 mt-2">
+                <h6 class="text-center" >Fecha de Publicación: [[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]</h2>
+            </div>
+        </div>
+        <div class="row mt-5">
+                    <div class="col-4 ">
+                        <img class="img-info" id="img-info"  th:src="@{/uploads/{image} (image=${item.image})}"  height="300px"
+                             width="400px">
+                    </div>
+                    
+                    <div class="col-8">
+                        <p th:utext="${item.content}"></p>
+                    </div>
+             </div>
+
+        <div class="row mt-5 text-center">
+            <div class="col-12">
+                <a th:href="@{/blog/find_update/{id}/true (id=${item.id})}" class="btn btn-primary"><i class="bi bi-pencil-square"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Actualizar</span></a>
+
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footerBlog :: footer}">
+    </div>
+</body>
+</html>

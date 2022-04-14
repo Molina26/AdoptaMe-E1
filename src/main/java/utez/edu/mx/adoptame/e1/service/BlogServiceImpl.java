@@ -115,6 +115,10 @@ public class BlogServiceImpl implements BlogService{
                 Blog blogUpdate = new Blog();
                 BeanUtils.copyProperties(blogDataRegistered.get(), blogUpdate);
                 BeanUtils.copyProperties(blogDto, blogUpdate);
+                logger.info("INFOR BEFORE DTO UPDATE " + blogDto.toString());
+                logger.info("INFOR BEFORE UPDATE " + blogUpdate.toString());
+                blogUpdate.setIsPrincipal(blogDto.getPrincipal());
+
 
                 Blog blogisUpdated = blogRepository.save(blogUpdate);
 
@@ -165,7 +169,7 @@ public class BlogServiceImpl implements BlogService{
 
     public Map<String, List<String>> getValidationToUpdateBlog(BlogUpdateDto blogDto) {
         Set<ConstraintViolation<BlogUpdateDto>> violations = validator.validate(blogDto);
-
+        logger.info("Error INITIAL -->" + violations.size());
         Map<String, List<String>> errors = new HashMap<>();
 
         if (!violations.isEmpty()) {
@@ -176,7 +180,7 @@ public class BlogServiceImpl implements BlogService{
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
-
+                logger.info("Error -->" + error.toString());
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {

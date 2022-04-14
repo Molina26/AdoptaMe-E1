@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
@@ -34,12 +34,12 @@
                 </ul>
                 <div class="d-flex">
                     <div sec:authorize="!isAuthenticated()">
-                        <a class="btn btn-success" th:href="@{/login}" >Iniciar Sesión</a>
+                        <a class="btn btn-success" th:href="@{/login}" ><i class="bi bi-box-arrow-in-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Iniciar Sesión</span></a>
                     </div>
                     <div sec:authorize="isAuthenticated()" class="d-flex">
                         <p class="text-white px-2 my-0 d-flex align-items-center" sec:authentication="name"></p>&nbsp
                         <form th:action="@{/logout}" method="post">
-                            <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                            <button class="btn btn-danger" type="submit"><i class="bi bi-box-arrow-in-right"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Cerrar Sesión</span></button>
                         </form>
                     </div>
 
