@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<header th:insert="~{fragments/head :: head}">
+
+</header>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="main">
+                    <div class="img">
+                        <img class="img-fluid" th:src="@{/images/wood.png}">
+                    </div>
+                    <div class="dog">
+                        <div class="dog__paws">
+                            <div class="dog__bl-leg leg">
+                                <div class="dog__bl-paw paw"></div>
+                                <div class="dog__bl-top top"></div>
+                            </div>
+                            <div class="dog__fl-leg leg">
+                                <div class="dog__fl-paw paw"></div>
+                                <div class="dog__fl-top top"></div>
+                            </div>
+                            <div class="dog__fr-leg leg">
+                                <div class="dog__fr-paw paw"></div>
+                                <div class="dog__fr-top top"></div>
+                            </div>
+                        </div>
+                        <div class="dog__body">
+                            <div class="dog__tail"></div>
+                        </div>
+                        <div class="dog__head">
+                            <div class="dog__snout">
+                                <div class="dog__nose"></div>
+                                <div class="dog__eyes">
+                                    <div class="dog__eye-l"></div>
+                                    <div class="dog__eye-r"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dog__head-c">
+                            <div class="dog__ear-l"></div>
+                            <div class="dog__ear-r"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div id="message-box" class="container-fluid">
+                    <h1>Error 403</h1>
+                    <p>Vaya, parece que no tienes permiso para ir ahí.</p>
+                    <p>Puedes usar estos botones para volver con las mascotas</p>
+                    <div id="buttons-con" class="container">
+                        <div class="action-link-wrap">
+                            <a onclick="history.back(-1)" class="link-button link-back-button">Volver</a>
+                            <a href="" class="link-button">Inicio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
