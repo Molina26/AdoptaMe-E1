@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<header th:insert="~{fragments/head :: head}">
-
-</header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/403.css}">
+    <link rel="stylesheet" th:href="@{/css/404.css}">
+    <link rel="stylesheet" th:href="@{/css/405.css}">
+    <link rel="stylesheet" th:href="@{/css/500.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo.ico}" type="image/x-icon"> \
+</head>
 
 <body>
     <div class="container-fluid">
@@ -55,7 +63,7 @@
                     <div id="buttons-con" class="container">
                         <div class="action-link-wrap">
                             <a onclick="history.back(-1)" class="link-button link-back-button">Volver</a>
-                            <a href="" class="link-button">Inicio</a>
+                            <a th:href="@{/}" class="link-button">Inicio</a>
                         </div>
                     </div>
                 </div>
