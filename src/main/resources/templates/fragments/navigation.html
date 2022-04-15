@@ -26,9 +26,14 @@
                             <a class="nav-link text-white" th:href="@{/pets/management_list}">Mascotas</a>
                         </li>
                     </div>
-                    <div>
+                    <div sec:authorize="isAuthenticated() && hasRole('ROLE_ADMINISTRADOR')">
                         <li class="nav-item">
                             <a class="nav-link text-white" th:href="@{/blog/management_list}">Noticias</a>
+                        </li>
+                    </div>
+                     <div >
+                        <li class="nav-item">
+                            <a class="nav-link text-white" th:href="@{/blog/general}">Noticias General</a>
                         </li>
                     </div>
                 </ul>

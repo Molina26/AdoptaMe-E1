@@ -1,19 +1,7 @@
 <!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Index</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
-    <link rel="stylesheet" th:href="@{/css/index.css}" />
-    <link rel="stylesheet" th:href="@{/css/indexListMascotas.css}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
-        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
-        crossorigin="anonymous" />
-</head>
 <header th:replace="~{fragments/head :: head}">
 </header>
 
@@ -24,158 +12,47 @@
 
     </div>
     <!--INICIO SLIDER-->
-    <div class="container">
-        <!--Init carousel-->
-        <div id="carouselBlog" class="carousel slide bg-dark" data-bs-ride="carousel"  style="height:700px !important;  background-color:rgb(134, 128, 128) !important;">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselBlog" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselBlog" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselBlog" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="d-flex justify-content-center">
-                        <img id="imgSlider" th:src="@{/images/gato3.jpg}"
-                             alt="...">
-                    </div>
-                    <div class="carousel-caption">
-                        <h1>First slide label</h1>
-                       
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="d-flex justify-content-center">
-                        <img id="imgSlider" th:src="@{/images/gato3.jpg}" alt="...">
-                    </div>
-                    <div class="carousel-caption">
-                        <h1>Second slide label</h1>
-                      
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="d-flex justify-content-center">
-                        <img id="imgSlider" th:src="@{/images/gato3.jpg}"  alt="...">
-                    </div>
-                    <div class="carousel-caption">
-                        <h1>Third slide label</h1>
-                        
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselBlog" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselBlog" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    <div class="container mt-5">
+         <div th:insert="~{fragments/alert :: alerts}">
         </div>
+        <!--Init carousel-->
+        <div class="row mt-5" th:if="${!flagRegister}">
+            <div class="col-12">
+                <h1 class="text-center">No existen blogs publicados</h1>
+            </div>
+        </div>
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel" th:if="${flagRegister}">
+            <div class="carousel-inner">
+                <div class="carousel-item" th:classappend="${iter.count == 1} ? active  : ''"  th:each="item, iter : ${listBlogs}">
+                    <img th:src="@{/uploads/{image} (image=${item.image})}" class="d-block w-100" alt="..." height="700px">
+                    <div class="carousel-caption d-none d-md-block row">
+                        <a class="btn-lg btn-dark text-decoration-none" th:href="@{/blog/find_details_blog/{id}/false (id=${item.id})}" > [[${item.title}]] </a>
+                       
+                      </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
         <!--Finish carousel-->
     </div>
-    <h2>NUESTRAS MASCOTAS</h2>
-    <div class="row row-cols-1 row-cols-ms-3 mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <img th:src="@{/images/gato3.jpg}" alt="rover" />
-                </div>
-                <div class="card-body">
-                    <span class="tag tag-teal">Gato</span>
-                    <p>Fecha publicación: <span style="font-size: 14px;">15-10-2021</span></p>
-                    <p>Nombre: Licha </p>
-                    <p>Sexo: Hembra</p>
-                    <p>Tamaño: Mediano</p>
-                    <div class="user">
-                        <div class="user-info">
-                            <h5><i class="far fa-heart"></i></h5>
-                            <small>Me gusta</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <img th:src="@{/images/mascota1.jpg}" alt="rover" />
-                </div>
-                <div class="card-body">
-                    <span class="tag tag-purple">Perro</span>
-                    <p>Fecha publicación: <span style="font-size: 14px;">15-10-2021</span></p>
-                    <p>Nombre: Toby </p>
-                    <p>Sexo: Macho</p>
-                    <p>Tamaño: Mediano</p>
-                    <div class="user">
-                        <div class="user-info">
-                            <h5><i class="far fa-heart"></i></h5>
-                            <small>Me gusta</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <img th:src="@{/images/gato3.jpg}" alt="rover" />
-                </div>
-                <div class="card-body">
-                    <span class="tag tag-pink">Gato</span>
-                    <p>Fecha publicación: <span style="font-size: 14px;">15-10-2021</span></p>
-                    <p>Nombre: Tomy </p>
-                    <p>Sexo: Hembra</p>
-                    <p>Tamaño: Pequeño</p>
-                    <div class="user">
-                        <div class="user-info">
-                            <h5><i class="far fa-heart"></i></h5>
-                            <small>Me gusta</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <img th:src="@{/images/mascota1.jpg}" alt="rover" />
-                </div>
-                <div class="card-body">
-                    <span class="tag tag-purple">Perro</span>
-                    <p>Fecha publicación: <span style="font-size: 14px;">15-10-2021</span></p>
-                    <p>Nombre: Toby </p>
-                    <p>Sexo: Macho</p>
-                    <p>Tamaño: Mediano</p>
-                    <div class="user">
-                        <div class="user-info">
-                            <h5><i class="far fa-heart"></i></h5>
-                            <small>Me gusta</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+   
+    <div class="row  mt-4">
+     <h2>NUESTRAS MASCOTAS</h2>
     </div>
 
-    <div th:replace="~{fragments/footer :: footer}">
+    <div th:replace="~{fragments/footerBlog :: footer}">
 
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-        </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/index.js}"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
 
 </body>
 

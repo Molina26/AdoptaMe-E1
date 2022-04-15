@@ -7,6 +7,7 @@ import utez.edu.mx.adoptame.e1.entity.Blog;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -15,5 +16,6 @@ public interface BlogService {
      Optional<Blog> findBlogById(Long id);
      boolean saveBlog(BlogInsertDto blog, String imageName, String username);
      boolean updateBlog(BlogUpdateDto blog);
+     List<Blog> findAllByIsPrincipal(Boolean isPrincipal);
    
 }

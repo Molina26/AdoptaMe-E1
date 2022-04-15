@@ -3,6 +3,9 @@ package utez.edu.mx.adoptame.e1.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.Date;
 
 @Entity
@@ -27,6 +30,7 @@ public class Blog {
     private String image;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private Date createdAt;
 
     @ManyToOne

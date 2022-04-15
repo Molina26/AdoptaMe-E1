@@ -66,6 +66,7 @@ public class BlogController {
         return "views/blog/blogList";
     }
 
+    
 
     @GetMapping("/create")
     @Secured({"ROLE_ADMINISTRADOR"})
@@ -90,17 +91,19 @@ public class BlogController {
         infoMovement.setUsername(auth.getName());
         infoMovement.setModuleName(MODULE_NAME);
 
+     
+
+        if(!validation.isEmpty()){
+            model.addAttribute("errors", validation);
+            logger.info("error in validation or image empty");
+            return "views/blog/blogForm";
+        }
+
         if(blog.getPrincipal() && image.isEmpty()){
             logger.info("INVALIDA"); 
             model.addAttribute("errors", validation);
             model.addAttribute("fileError", MESSAGE_FILE_NOT_SELECTED);
             model.addAttribute("blog", blog);      
-            return "views/blog/blogForm";
-        }
-
-        if(!validation.isEmpty()){
-            model.addAttribute("errors", validation);
-            logger.info("error in validation or image empty");
             return "views/blog/blogForm";
         }
 
@@ -156,28 +159,32 @@ public class BlogController {
         int itemsByPage = 6;
         Pageable pageRequest = PageRequest.of(page, itemsByPage);
         Page<Blog> blogs = blogService.findAllBlog(pageRequest);
-
+        boolean flagRegister = (blogs.getContent().size() > 0) ?  true : false;
+      
         PageRender<Blog> pageRender = new PageRender<>("/blog/blog", blogs);
 
         model.addAttribute("listBlogs", blogs);
         model.addAttribute("page", pageRender);
+        model.addAttribute("flagRegister", flagRegister);
         model.addAttribute("index", (itemsByPage * page));
 
         return "views/blog/blog";
     }
 
-    @GetMapping("/find_details_blog/{id}")
-    public String sectionGeneralBlogDetails(@PathVariable("id") Long id, Model model, RedirectAttributes flash){
+    @GetMapping("/find_details_blog/{id}/{flag}")
+    public String sectionGeneralBlogDetails(@PathVariable("id") Long id, @PathVariable("flag") String flag, Model model, RedirectAttributes flash){
 
         InfoToast info = new InfoToast();
         Optional<Blog> blogExists = blogService.findBlogById(id);
 
         if(blogExists.isPresent()){
-
-            logger.info("Blog  "+ blogExists.toString());
-            model.addAttribute("blog", blogExists.get());
-
-            return "views/blog/detailBlog";
+            if(flag.equals("true") || flag.equals("false")){
+                logger.info("Blog  "+ blogExists.toString());
+                model.addAttribute("blog", blogExists.get());
+                model.addAttribute("flag" , Boolean.parseBoolean(flag));
+    
+                return "views/blog/detailBlog";
+            }
         }
 
         info.setTitle("Blog no encontrado");
@@ -186,7 +193,7 @@ public class BlogController {
 
         flash.addFlashAttribute("info", info);
 
-        return "redirect:/blog/blog";
+        return "redirect:/index";
 
     }
 

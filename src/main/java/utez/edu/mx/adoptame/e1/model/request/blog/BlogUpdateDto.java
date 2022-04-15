@@ -12,7 +12,7 @@ public class BlogUpdateDto {
     private Long id;
 
     @NotEmpty(message = "Debe de indicar el titulo del blog")
-    @Pattern(regexp = "[a-zA-Z ]{3,70}", message = "Valor no aceptado")
+    @Pattern(regexp = "[a-zA-Z ñáéíóúÁÉÍÓÚÑ¿?!¡]{3,70}", message = "Valor no aceptado")
     private String title;
 
     @NotNull(message = "De de indicar si el blog es principal")

@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Art.Design Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Font awesome icon -->
-
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/blog.css}">
     <link rel="stylesheet" th:href="@{/icons/bootstrap-icons.css}">
+
 </head>
 
 <body>
@@ -43,9 +41,9 @@
 
                 <!-- item -->
                 <div class="row">
-                    <div class="col-4 align-content-center">
+                    <div class="col-4 align-content-center" >
                         <img class="img-info" id="img-info"  th:src="@{/uploads/{image} (image=${item.image})}"  height="200px"
-                             width="300px">
+                             width="300px" th:if="${item.image != null}">
                     </div>
 
                     <div class="design-text-info col-8">
@@ -55,8 +53,10 @@
                 <!-- end of item -->
             <div class="row mt-5">
                 <div class="col-12 text-end">
-                    <a th:href="@{/blog/general}" class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
+                    <a th:href="@{/blog/general}"  th:if="${flag == true}" class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
+                    <a th:href="@{/}"  th:if="${flag == false}"  class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
                 </div>
+               
             </div>
         </div>
     </section>

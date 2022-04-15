@@ -11,13 +11,10 @@ import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
-import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.BlogRepository;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
-
-import javax.swing.text.html.Option;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Validator;
@@ -48,7 +45,7 @@ public class BlogServiceImpl implements BlogService{
     @Override
     @Transactional(readOnly = true)
     public Page<Blog> findAllBlog(Pageable pageable) {
-        return blogRepository.findAll(pageable);
+        return blogRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
 
@@ -74,7 +71,7 @@ public class BlogServiceImpl implements BlogService{
             blog.setIsPrincipal(blogDto.getPrincipal());
             blog.setImage(imageName);
             blog.setUser(user);
-            blog.setCreatedAt(new Date());
+           
 
             logger.info("INFOR BLOG BEFORE INSERT  " + blog.toString());
 
@@ -193,5 +190,10 @@ public class BlogServiceImpl implements BlogService{
     }
 
 
+    @Override
+    public List<Blog> findAllByIsPrincipal(Boolean isPrincipal) {
+        
+        return blogRepository.findAllByIsPrincipal(isPrincipal);
+    }
 
 }
