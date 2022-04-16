@@ -1,7 +1,5 @@
 package utez.edu.mx.adoptame.e1.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,8 +52,6 @@ public class PetController {
     private final InfoMovement infoMovement;
 
     private final GeneralInfoApp generalInfoApp;
-
-    private final Logger logger = LoggerFactory.getLogger(PetController.class);
 
     private List<Color> listColors = new ArrayList<>();
 

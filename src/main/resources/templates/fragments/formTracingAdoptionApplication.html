@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+<div th:fragment="petAdoptionForm" th:if="${adoptionForm != null}">
+    <h5>Estado solicitud de la mascota</h5>
+    <form th:object="${adoptionForm}" th:action="@{/adoptions/response_application}" method="post">
+        <div class="col-12 col-sm-6">
+            <input th:field="*{id}" type="hidden">
+
+            <label class="form-label">Estado de solicitud</label>
+            <div class="form-check" th:each="item : ${listStatesAdoption}">
+
+                <input th:field="*{state}" th:value="${item}" class="form-check-input" type="radio" name="accepted">
+                <label class="form-check-label text-capitalize">
+                    [[${item}]]
+                </label>
+            </div>
+            <div class="form-text text-danger" th:if="${errors != null && errors.get('state') != null}">
+                    <span th:each="error: ${errors.get('state')}">
+                        [[${error}]]
+                        <br>
+                    </span>
+            </div>
+            <div class="form-text text-danger" th:if="${errorMessage != null}">
+                   [[${errorMessage}]]
+            </div>
+        </div>
+        <div class="col-12 px-5 mt-3">
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary">
+                    Cambiar estado de solicitud
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

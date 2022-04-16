@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -12,9 +12,11 @@
 
     <div th:fragment="formAdopt" th:if="${adoptionInfo!= null}">
         <h5>¿Te interesa este agradable amigo?</h5>
-        <form th:object="${adoptionInfo}" th:action="@{/pets/change}" method="post">
-            [[${adoptionInfo}]]
+        <form th:object="${adoptionInfo}" th:action="@{/adoptions/save}" method="post">
             <div class="col-12 px-5 mt-3">
+                <input type="hidden" th:field="*{username}">
+                <input type="hidden" th:field="*{petId}">
+
                 <div class="d-grid gap-2">
                     <button class="btn btn-primary">
                         Enviar solicitud de adopción

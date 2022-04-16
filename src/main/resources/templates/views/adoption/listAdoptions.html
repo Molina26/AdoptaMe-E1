@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:replace="~{fragments/head :: head}">
+</header>
+
+<body>
+<div th:insert="~{fragments/infoToast :: infoToast}">
+</div>
+<div th:replace="~{fragments/navigation :: navigation}">
+</div>
+
+<div class="container mt-3">
+    <div class="row">
+        <h2 class="col-6">Solicitudes de adopción</h2>
+    </div>
+
+    <div class="table-responsive-sm table-responsive-md mt-2">
+        <div th:insert="~{fragments/alert :: alerts}">
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="text-center" scope="col">#</th>
+                <th class="text-center" scope="col">Mascota</th>
+                <th class="text-center" scope="col" sec:authorize="hasRole('ROLE_VOLUNTARIO')">Usuario solicitante</th>
+                <th class="text-center" scope="col" sec:authorize="hasRole('ROLE_VOLUNTARIO')">Nombre solicitante</th>
+                <th class="text-center" scope="col">Estado de solicitud</th>
+                <th class="text-center" scope="col">Fecha de solicitud</th>
+                <th class="text-center" scope="col">Fecha de respuesta</th>
+                <th class="text-center" scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item, iter : ${adoptionsList}">
+                <th class="text-center" scope="row">[[${ index + (iter.index + 1) }]]</th>
+                <td class="text-center">
+                    [[${item.pet.name}]]
+                </td>
+                <td class="text-center" sec:authorize="hasRole('ROLE_VOLUNTARIO')">
+                    [[${item.user.username}]]
+                </td>
+                <td class="text-center" sec:authorize="hasRole('ROLE_VOLUNTARIO')">
+                    [[${item.user.name}]]&nbsp;[[${item.user.firstLastname}]]&nbsp;[[${item.user.secondLastname}]]
+                </td>
+                <td class="text-capitalize text-center">[[${item.state}]]</td>
+                <td class="text-center" th:text="${#dates.format(item.applicationDate, 'dd-MMM-yyyy')}"></td>
+                <td class="text-center">
+                    <p th:if="${item.closedDate != null}">
+                        [[${#dates.format(item.closedDate, 'dd-MMM-yyyy')}]]
+                    </p>
+                    <p th:if="${item.closedDate == null}">
+                        *******
+                    </p>
+                </td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/adoptions/report/{id}(id=${item.id})}">Ver detalle</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:insert="~{fragments/paginator :: paginator}">
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}">
+
+</div>
+</body>
+
+</html>

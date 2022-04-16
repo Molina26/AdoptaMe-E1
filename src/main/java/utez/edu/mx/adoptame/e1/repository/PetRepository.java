@@ -15,7 +15,7 @@ public interface PetRepository extends PagingAndSortingRepository<Pet, Long>{
 
    Page<Pet> findAllByAvailableAdoptionAndTypeAndIsAccepted(Boolean available, String type, String isAccepted, Pageable pageable);
 
-   @Query("SELECT p FROM Pet p WHERE p.type LIKE ?1 AND p.isAccepted LIKE 'aceptado' AND (p.color.id = ?2 OR p.size.id = ?3 OR p.personality.id = ?4)")
+   @Query("SELECT p FROM Pet p WHERE p.type LIKE ?1 AND p.isAccepted LIKE 'aceptado' AND p.availableAdoption = true AND (p.color.id = ?2 OR p.size.id = ?3 OR p.personality.id = ?4)")
    Page<Pet> findPetsByColorSizeOrPersonalityToAdopt(String typePet, Long colorId, Long sizeId, Long personalityId, Pageable pageable);
 
    @Transactional

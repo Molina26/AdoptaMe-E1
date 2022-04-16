@@ -17,11 +17,11 @@ import javax.validation.constraints.Pattern;
 public class PetInsertDto {
 
     @NotEmpty(message = "Debe de indicar el nombre de la mascota")
-    @Pattern(regexp = "[a-zA-Z ]{3,250}", message = "Valor no aceptado")
+    @Pattern(regexp = "[a-zA-ZñÑáéíóúÁÉÍÓÚ ]{3,250}", message = "Valor no aceptado")
     private String name;
 
     @NotEmpty(message = "Debe indicar la edad de la mascota")
-    @Pattern(regexp = "[a-zA-Z0-9 ]{1,40}", message = "Valor no aceptado")
+    @Pattern(regexp = "[a-zA-Z0-9ñÑ ]{1,40}", message = "Valor no aceptado")
     private String age;
 
     @ValueOfEnumAccepted(enumClass = Sex.class, message = "Este valor no es aceptado para el sexo")

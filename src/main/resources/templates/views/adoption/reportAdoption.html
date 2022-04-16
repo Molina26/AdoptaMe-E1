@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:replace="~{fragments/head :: head}">
+</header>
+
+<body>
+<div th:replace="~{fragments/navigation :: navigation}">
+</div>
+
+<div class="container mt-3">
+    <h2>Solicitud de adopción</h2>
+    <div th:insert="~{fragments/alert :: alerts}">
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-4 d-flex mb-2 justify-content-center align-items-center">
+            <img class="img-fluid border-2 border-dark" th:src="@{/uploads/{image}(image=${pet.image})}" alt="" />
+        </div>
+        <div class="col-12 col-md-8 border border-3 border-dark rounded p-2">
+            <div th:insert="~{fragments/infoPet :: infoPet}">
+
+            </div>
+
+            <div class="mt-1" >
+               <h4 class="mb-3">Información general de la solicitud</h4>
+                <div class="row px-5">
+                    <div class="col-12 col-sm-6 mb-2">
+                        <p class="fw-bold">Usuario solicitante</p>
+                        <p>
+                            [[${applicationInfo.user.username}]]
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-6 mb-2">
+                        <p class="fw-bold">Nombre usuario solicitante</p>
+                        <p>
+                            [[${applicationInfo.user.name}]]&nbsp;[[${applicationInfo.user.firstLastname}]]&nbsp;[[${applicationInfo.user.secondLastname}]]
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-6 mb-2">
+                        <p class="fw-bold">Estado de la solicitud</p>
+                        <p class="text-capitalize">
+                            [[${applicationInfo.state}]]
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-6 mb-2">
+                        <p class="fw-bold">Fecha de solicitud</p>
+                        <p>
+                            [[${#dates.format(applicationInfo.applicationDate, 'dd-MMM-yyyy')}]]
+                        </p>
+                    </div>
+                    <div class="col-12 col-sm-6 mb-2">
+                        <p class="fw-bold">Fecha de respuesta</p>
+                        <p>
+                        <p th:if="${applicationInfo.closedDate != null}">
+                            [[${#dates.format(applicationInfo.closedDate, 'dd-MMM-yyyy')}]]
+                        </p>
+                        <p th:if="${applicationInfo.closedDate == null}">
+                            *******
+                        </p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-2" th:if="${applicationInfo.closedDate == null}" sec:authorize="hasRole('ROLE_VOLUNTARIO')" th:insert="~{fragments/formTracingAdoptionApplication :: petAdoptionForm}">
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}">
+</div>
+</body>
+
+</html>

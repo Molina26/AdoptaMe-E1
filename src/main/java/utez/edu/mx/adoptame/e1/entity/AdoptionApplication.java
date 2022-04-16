@@ -30,4 +30,17 @@ public class AdoptionApplication {
     @ManyToOne
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
+
+    @Override
+    public String toString() {
+        return "AdoptionApplication:{" +
+                "id=" + id +
+                ", state='" + state + '\'' +
+                ", applicationDate=" + applicationDate +
+                ", closedDate=" + closedDate +
+                ", user=" + user +
+                ", pet=" + pet +
+                '}';
+    }
+
 }
