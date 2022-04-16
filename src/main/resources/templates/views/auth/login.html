@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-
-<header th:insert="~{fragments/head :: head}">
-
-</header>
+<header th:insert="~{fragments/head :: head}"></header>
 
 <body>
+    <div th:insert="~{fragments/infoToast :: infoToast}"> </div>
+
     <input type="hidden" th:value="${login}">
+
     <div th:insert="~{fragments/infoToast :: infoToast}">
     </div>
-
-    <!--    <div th:replace="~{fragments/navigation :: navigation}">-->
-
-    <!--    </div>-->
 
     <main>
 
         <div class="container" id="container">
             <!--Formulario de registro-->
             <div class="form-container sign-up-container">
-                <form action="#">
+                <!-- <form action="#">
                     <h1 class="h1sing">Crear Cuenta</h1>
                     <label class="label">Nombre</label>
                     <input type="text" name="name" placeholder="Nombre" />
@@ -41,7 +36,29 @@
                     <input type="password" name="password" placeholder="Contraseña" />
                     <label class="label">Confirmar contraseña</label>
                     <input type="password" name="password" placeholder="Confirmar Contraseña" />
-                    <button>Registrar</button>
+                    <button>Registrar</button> ======= -->
+                <form th:action="@{/create-acount}" method="post" th:object="${user}">
+
+                    <input type="text" name="name" placeholder="Nombre" th:value="${user.name}" required />
+                    <input type="text" name="first_lastname" placeholder="Primer apellido" th:field="*{firstLastname}" required />
+                    <input type="text" name="second_lastname" placeholder="Segundo apellido" th:field="*{secondLastname}" required />
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" name="username" placeholder="Usuario" th:value="${user.username}" required />
+                        </div>
+                        <label class="label">Soy...</label>
+                        <div>
+                            <label class="radio" for="inlineRadio1"><input class="form-check-input" type="radio"
+                                        name="rol" value="adoptador">Adoptador</label>
+                            <label class="radio" for="inlineRadio2"><input class="form-check-input" type="radio"
+                                        name="rol" value="option2">Voluntario</label>
+                        </div>
+
+
+                    </div>
+                    <input type="password" name="password" placeholder="Contraseña" th:value="${user.password}" onchange="validPassword()" id="password" required />
+                    <input type="password" name="password" placeholder="Confirmar Contraseña" onchange="validPassword()" id="confirmPassword" required />
+                    <button type="submit" id="buttonRegister" onclick="validPassword()">Registrar</button>
                 </form>
             </div>
             <!--Inicio de sesion perro-->
@@ -193,7 +210,28 @@
         </div>
     </main>
     <div th:replace="~{fragments/footer :: footer}"></div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 
+    <script>
+        function validPassword() {
+            var pass1 = $("#password").val();
+            var pass2 = $("#confirmPassword").val();
+            var submitButton = $("#buttonRegister");
+            if (pass1 !== pass2) {
+                submitButton.attr('disabled', true);
+                $("#password").addClass('is-invalid');
+                $("#confirmPassword").addClass('is-invalid');
+                $(".alertPass").attr('hidden', false);
+                event.preventDefault();
+                return;
+            } else {
+                $("#password").removeClass("is-invalid");
+                $("#confirmPassword").removeClass("is-invalid");
+                $(".alertPass").attr('hidden', true);
+                submitButton.attr('disabled', false);
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -44,13 +44,6 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<Pet> findLastInsertedToAdoption(String tracingRegister, Integer limit) {
-        // return petRepository.findLastInsertedToAdoptionWithLimit(tracingRegister,
-        // limit);
-        return null;
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Page<Pet> findAll(Pageable pageable) {
         return petRepository.findAll(pageable);
@@ -222,7 +215,6 @@ public class PetServiceImpl implements PetService {
             }
         }
 
-
         return flag;
     }
 
@@ -277,6 +269,7 @@ public class PetServiceImpl implements PetService {
         }
         return errors;
     }
+
 
     public Map<String, List<String>> getValidationToAcceptOrReject(PetTracingRegisterDto petDto) {
         Set<ConstraintViolation<PetTracingRegisterDto>> violations = validator.validate(petDto);

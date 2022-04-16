@@ -13,6 +13,7 @@
         </div>
 
         <form th:object="${pet}" class="row mt-3 px-5" th:action="@{/pets/save}" method="post" enctype="multipart/form-data">
+
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label class="form-label">Nombre</label>
                 <input type="text" th:field="*{name}" class="form-control" placeholder="Nombre" />
@@ -26,6 +27,7 @@
             <div class="col-12 col-sm-6 col-md-4 mb-3">
                 <label for="agePet" class="form-label">Edad</label>
                 <input type="text" th:field="*{age}" class="form-control" id="agePet" aria-describedby="emailHelp" placeholder="Edad">
+
                 <div class="form-text text-danger" th:if="${errors != null && errors.get('age') != null}">
                     <span th:each="error: ${errors.get('age')}">
                         [[${error}]]
@@ -47,6 +49,7 @@
                         Gato
                     </label>
                 </div>
+
                 <div class="form-text text-danger" th:if="${errors != null && errors.get('type') != null}">
                     <span th:each="error: ${errors.get('type')}">
                         [[${error}]]
@@ -68,6 +71,7 @@
                         Hembra
                     </label>
                 </div>
+
                 <div class="form-text text-danger" th:if="${errors != null && errors.get('sex') != null}">
                     <span th:each="error: ${errors.get('sex')}">
                         [[${error}]]

@@ -70,12 +70,13 @@ public class PetController {
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
 
     public PetController(PetServiceImpl petService,
-                        ColorServiceImpl colorService,
-                        PersonalityServiceImpl personalityService,
-                        SizeServiceImpl sizeService,
-                        ImageManager imageManager,
-                        InfoMovement infoMovement,
-                        GeneralInfoApp generalInfoApp) {
+            ColorServiceImpl colorService,
+            PersonalityServiceImpl personalityService,
+            SizeServiceImpl sizeService,
+            ImageManager imageManager,
+            InfoMovement infoMovement,
+            GeneralInfoApp generalInfoApp) {
+
         this.petService = petService;
         this.colorService = colorService;
         this.personalityService = personalityService;
@@ -118,20 +119,21 @@ public class PetController {
 
     @GetMapping("/filter")
     public String filterPets(PetSearchDto pet,
-                             @RequestParam(name = "page", defaultValue = "0") int page,
-                             Model model) {
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            Model model) {
 
         int itemsByPageSearch = 6;
 
         Pageable pageRequest = PageRequest.of(page, itemsByPageSearch, Sort.by("createdAt").descending());
 
-        if (pet.getTypePet() == null ) {
+        if (pet.getTypePet() == null) {
             pet.setTypePet(generalInfoApp.getTypePet());
         }
 
         Page<Pet> pets = petService.findPetsByColorSizeOrPersonality(pet, pageRequest);
 
-        String pathToSerch = "?typePet="+pet.getTypePet()+"&colorId="+pet.getColorId()+"&sizeId="+pet.getSizeId()+"&personalityId="+pet.getPersonalityId();
+        String pathToSerch = "?typePet=" + pet.getTypePet() + "&colorId=" + pet.getColorId() + "&sizeId="
+                + pet.getSizeId() + "&personalityId=" + pet.getPersonalityId();
 
         PageRender<Pet> pageRender = new PageRender<>("/pets/filter".concat(pathToSerch), pets);
 
@@ -339,7 +341,6 @@ public class PetController {
 
         InfoToast info = new InfoToast();
 
-
         Optional<Pet> petExisted = petService.findPetById(id);
 
         if (petExisted.isPresent()) {
@@ -440,4 +441,5 @@ public class PetController {
             this.listSizes = sizeService.findAllSizes();
         }
     }
+
 }

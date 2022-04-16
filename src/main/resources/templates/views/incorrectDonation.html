@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" th:href="@{/css/pendingDonation.css}">
+</head>
+<body>
+ 
+
+    <div class="text-center">
+        <h4><a href="#myModal" class="trigger-btn" data-toggle="modal">Error al pagar</a></h4>
+        <!-- Button HTML (to Trigger Modal PAGO PENDIENTE) -->
+        <h4><a href="#myModal2" class="trigger-btn" data-toggle="modal">Modal pendiente de pago</a></h4>
+    </div>
+
+    <!-- ModalERROR EN PAGOA HTML -->
+<div id="myModal" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="icon-box" 
+                style="color: #fff;		
+                position: absolute;
+                margin: 0 auto;
+                left: 0;
+                right: 0;
+                top: -40px;
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                z-index: 9;
+                background: #ef513a;
+                padding: 15px;
+                text-align: center;
+                box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);">
+					<i class="material-icons" style="font-size: 35px;
+                    position: relative;
+                    top: 4px;">&#xE5CD;</i>
+				</div>
+				<h4 style="padding-top: 9%;" class="modal-title">Error</h4>	
+			</div>
+			<div class="modal-body">
+				<p class="text-center">El pago no se pudo realizar correctamente, vuelve a verificar los datos</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-danger btn-block" data-dismiss="modal" style="color: #fff;
+                border-radius: 4px;
+                background: #ef513a !important;
+                text-decoration: none;
+                transition: all 0.4s;
+                line-height: normal;
+                border: none;
+                ">Ocultar</button>
+			</div>
+		</div>
+	</div>
+</div> 
+
+
+<!-- Modal PAGO PENDIENTE HTML -->
+<div id="myModal2" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="icon-box">
+					<i class="material-icons" style="color:#f95858">&#xE86B;</i>
+					<i class="material-icons" style="color:#f95858">&#xE645;</i>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span>&times;</span></button>
+			</div>
+			<div class="modal-body text-center">
+				<h4>Ups algo salió mal</h4>	
+				<p>El pago está en proceso, actualmente está en estado "pendiente"</p>
+				<button class="btn btn-primary" data-dismiss="modal">Regresar</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

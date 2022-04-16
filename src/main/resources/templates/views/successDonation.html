@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/successDonation.css}">
+    <title>Document</title>
+</head>
+
+<body>
+
+    
+<div th:insert="~{fragments/infoToast :: infoToast}">
+</div>
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+    <!-- header -->
+    <header th:style="'background: url(/images/perritu.png) no-repeat center center fixed; width:100%'">
+        <div class="banner">
+            <div class="container">
+                <h1 class="banner-title">¡GRACIAS POR AYUDAR!</h1>
+                <br><br>
+                <p>Con tu apoyo muchas mascotas tendrán alimentos</p>
+            </div>
+        </div>
+    </header>
+    <div style="margin: 7% 9%;">
+        <div id="app" class="col-11">
+
+            <div class="row my-3">
+              <div class="col-10">
+                <h1>DETALLE DE FACTURACIÓN:</h1>
+                <p>Av. Universidad Tecnológica 1, Palo Escrito, 62765 Emiliano Zapata, Mor.</p>
+                <p>Donación a la organización "AdoptaMe"</p>
+              </div>
+            </div>
+          
+            <hr />
+          
+            <div class="row fact-info mt-3">
+              <div class="col-3">
+                <h5>Nombre:</h5>
+                <p>
+                  Jesús Cabrera Allende
+                </p>
+              </div>
+              <div class="col-3">
+                <h5>Fecha:</h5>
+                <p>
+                  12-04-2022
+                </p>
+              </div>
+              <div class="col-3">
+                <h5>N° de factura</h5>
+                <h5>Estatus:</h5>
+              </div>
+              <div class="col-3">
+                <h5>103</h5>
+                <p>Exitosa</p>
+              </div>
+            </div>
+          
+            <div class="row my-5">
+              <table class="table table-borderless factura">
+                <thead>
+                  <tr>
+                    <th>Cantidad</th>
+                    <th>Descripcion</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Donación para mascotas</td>
+                    <td>3,000.00</td>
+                    <td>12-04-2022</td>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Donación para alimentos</td>
+                    <td>4,000.00</td>
+                    <td>12-04-2022</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Total Factura</th>
+                    <th>MXN $<strong>7,000.00</strong></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            
+            <button type="button" class="btn btn-info btn-lg">Volver</button>
+        </div>
+    </div>
+    
+</body>
+
+</html>

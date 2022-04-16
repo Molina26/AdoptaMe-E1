@@ -8,11 +8,9 @@ import utez.edu.mx.adoptame.e1.model.request.pet.PetSearchDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PetService {
-    List<Pet> findLastInsertedToAdoption(String tracingRegister, Integer limit);
 
     Page<Pet> findAll(Pageable pageable);
 

@@ -1,6 +1,9 @@
 package utez.edu.mx.adoptame.e1.entity;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +34,7 @@ public class UserAdoptame {
     private Boolean enabled;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private Date createdAt;
 
     @ManyToMany
@@ -130,3 +134,4 @@ public class UserAdoptame {
         this.favoritesPets = favoritesPets;
     }
 }
+

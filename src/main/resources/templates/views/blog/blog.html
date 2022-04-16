@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/blog.css}">
+    <title>AdoptaMe</title>
+</head>
+<body>
+<div th:insert="~{fragments/infoToast :: infoToast}">
+</div>
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+<!-- header -->
+<header th:style="'background: url(/images/perritos2.jpg) no-repeat center center fixed; width:100%'">
+    <div class="banner">
+        <div class="container">
+            <h1 class="banner-title">Blogs</h1>
+            <br><br>
+            <p>Encuentra interesantes artículos sobre nuestras mascotas y nuestra campaña para seguir apoyando a los animales</p>
+        </div>
+    </div>
+</header>
+<!-- end of header -->
+
+
+<!-- design -->
+<section class="design" id="design">
+    <div class="container">
+
+        <div th:insert="~{fragments/alert :: alerts}">
+        </div>
+        <h1 class="text-center" th:if="${!flagRegister}">No existen blogs publicados</h1>
+        <div class="design-content">
+            <!-- item -->
+            <div class="design-item" th:each="item : ${listBlogs}">
+                <div class="design-img">
+                    <img id="img-index" th:src="@{/uploads/{image} (image=${item.image})}" alt="Este blog no tiene imagen" height="400px" width="300px">
+                    <span style="display: none;"> <li>icono</li></span>
+                    <span></span>
+                </div>
+                <div class="design-title">
+                    <p style="font-size: 17px;">Fecha publicación: <span style="font-size: 14px;">[[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]</span></p>
+                    <p style="font-size: 17px;">Escrito por: <span style="font-size: 17px;">[[${item.user.name}]] [[${item.user.firstLastname}]] [[${item.user.secondLastname}]]</span></p>
+                    <a th:href="@{/blog/find_details_blog/{id}/true (id=${item.id})}">Ver completo</a>
+                </div>
+            </div>
+
+            <!-- end item -->
+        </div>
+        <div th:insert="~{fragments/paginator :: paginator}" th:if="${flagRegister}">
+        </div>
+
+    </div>
+</section>
+
+
+<div th:replace="~{fragments/footerBlog :: footer}"></div>
+
+
+</body>
+</html>
