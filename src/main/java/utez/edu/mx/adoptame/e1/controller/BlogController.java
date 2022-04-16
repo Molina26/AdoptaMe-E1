@@ -1,8 +1,7 @@
 package utez.edu.mx.adoptame.e1.controller;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,8 +33,6 @@ public class BlogController {
     private final BlogServiceImpl blogService;
     private final ImageManager imageManager;
     private final InfoMovement infoMovement;
-
-    private final Logger logger = LoggerFactory.getLogger(BlogController.class);
 
     private final String MODULE_NAME = "BLOG";
 
@@ -156,7 +153,7 @@ public class BlogController {
         Page<Blog> blogs = blogService.findAllBlog(pageRequest);
         boolean flagRegister = (blogs.getContent().size() > 0) ?  true : false;
       
-        PageRender<Blog> pageRender = new PageRender<>("/blog/blog", blogs);
+        PageRender<Blog> pageRender = new PageRender<>("/blog/general", blogs);
 
         model.addAttribute("listBlogs", blogs);
         model.addAttribute("page", pageRender);
@@ -271,7 +268,6 @@ public class BlogController {
 
 
         if(!imageF.isEmpty()){
-            logger.info("IMAGE UPDATE  )  ");
             String imageNameP  = imageF.getOriginalFilename()+"";
 
             for (int i = 0; i < VOWELS_AND_SPACE.length; i++) {

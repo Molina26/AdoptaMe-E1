@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.entity.Role;
 import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import utez.edu.mx.adoptame.e1.repository.RolRepository;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
-import utez.edu.mx.adoptame.e1.util.InfoMovement;
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Validator;
@@ -27,15 +25,11 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
     private final Logger logger = LoggerFactory.getLogger(UserAdoptameServiceImpl.class);
     private final UserAdoptameRepository userAdoptameRepository;
     private final RolRepository rolRepository;
-    private final MovementManagementServiceImpl movementManagementService;
-    private final InfoMovement infoMovement;
     private final PasswordEncoder passwordEncoder;
 
-    public UserAdoptameServiceImpl(MovementManagementServiceImpl movementManagementService, InfoMovement infoMovement,
+    public UserAdoptameServiceImpl(
             UserAdoptameRepository userAdoptameRepository, Validator validator, RolRepository rolRepository,
             PasswordEncoder passwordEncoder) {
-        this.movementManagementService = movementManagementService;
-        this.infoMovement = infoMovement;
         this.userAdoptameRepository = userAdoptameRepository;
         this.validator = validator;
         this.rolRepository = rolRepository;
@@ -52,7 +46,7 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
     public boolean saveUser(UserInsertDto userDto) {
         boolean validInsert = false;
 
-        Optional<Role> rol = rolRepository.findById(userDto.getRole().getId());
+        Optional<Role> rol = rolRepository.findRolByName(userDto.getRole().getName());
 
         if (rol.isPresent()) {
             if (rol.get().getName().equals("ROLE_ADOPTADOR") || rol.get().getName().equals("ROLE_VOLUNTARIO")) {
@@ -63,21 +57,13 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
 
                 BeanUtils.copyProperties(userDto, user);
                 user.setEnabled(true);
+                user.getRoles().add(rol.get());
+               
                 try {
                     UserAdoptame userInsertedBd = userAdoptameRepository.save(user);
 
                     if (userInsertedBd.getId() != 0) {
-                        validInsert = true;
-
-                        MovementManagement movement = new MovementManagement();
-
-                        movement.setModuleName(infoMovement.getModuleName());
-                        movement.setUsername(infoMovement.getUsername());
-                        movement.setAction(infoMovement.getActionMovement());
-                        movement.setMovementDate(new Date());
-                        movement.setNewData(userInsertedBd.toString());
-
-                        movementManagementService.createOrUpdate(movement);
+                        validInsert = true;    
                     }
                 } catch (Exception e) {
                     logger.error("error to insert userAdoptame");
@@ -103,6 +89,7 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
+                logger.info("Error " + error.getPropertyPath().toString()+"   " +error.getMessage() );
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {

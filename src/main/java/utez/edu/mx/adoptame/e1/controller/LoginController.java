@@ -6,16 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import utez.edu.mx.adoptame.e1.util.InfoMovement;
-import utez.edu.mx.adoptame.e1.entity.Role;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
-import utez.edu.mx.adoptame.e1.service.RolServiceImpl;
 import utez.edu.mx.adoptame.e1.service.UserAdoptameServiceImpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -23,20 +19,13 @@ import java.util.Map;
 @Controller
 public class LoginController {
 
-    private final InfoMovement infoMovement;
 
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
-
-    private final String MODULE_NAME = "LOGIN";
-
-    private final RolServiceImpl rolService;
 
     private final UserAdoptameServiceImpl userAdoptameService;
 
-    public LoginController(InfoMovement infoMovement, RolServiceImpl rolService,
+    public LoginController(
             UserAdoptameServiceImpl userAdoptameService) {
-        this.infoMovement = infoMovement;
-        this.rolService = rolService;
+      
         this.userAdoptameService = userAdoptameService;
     }
 
@@ -46,7 +35,7 @@ public class LoginController {
             RedirectAttributes flash) {
         InfoToast info = new InfoToast();
         model.addAttribute("login", true);
-
+        model.addAttribute("user", new UserInsertDto());
         if (principal != null) {
             info.setTitle("Sesión iniciada");
             info.setMessage("Ya cuenta con una sesión activa");
@@ -69,29 +58,33 @@ public class LoginController {
         }
 
         model.addAttribute("user", new UserInsertDto());
-        List<Role> listRol = rolService.findAllRol();
-        if (listRol.get(0).getName().equals("ROLE_ADMINISTRADOR")) {
-            listRol.remove(0);
-        }
-
-        model.addAttribute("listRol", listRol);
+     
 
         return "views/auth/login";
     }
 
     @PostMapping("/create-acount")
     public String createAcount(Model model, UserInsertDto userDto, RedirectAttributes flash) {
+        model.addAttribute("login", true);
 
         InfoToast info = new InfoToast();
         Map<String, List<String>> validationsAcount = userAdoptameService.getValidationInsertUserAdoptame(userDto);
 
-        logger.info("USER TO STRING " + userDto.toString());
+        String passwordFine = userDto.getPassword().substring(0,userDto.getPassword().indexOf(","));
+
+        userDto.setPassword(passwordFine);
 
         if (!validationsAcount.isEmpty()) {
+            info.setTitle("Error al crear la cuenta");
+            info.setMessage("Los datos ingresados son erróneos");
+            info.setTypeToast("error");
+            model.addAttribute("info", info);
             model.addAttribute("errors", validationsAcount);
             model.addAttribute("user", userDto);
             return "views/auth/login";
         }
+
+        
         UserAdoptame userExist = userAdoptameService.findUserByUsername(userDto.getUsername());
         if (userExist != null) {
             info.setTitle("Error al crear la cuenta");
@@ -108,8 +101,11 @@ public class LoginController {
             info.setTitle("Cuenta Creada");
             info.setMessage("Bienvenido ".concat(userDto.getUsername()));
             info.setTypeToast("success");
-            flash.addFlashAttribute("info", info);
-        } else {
+            model.addAttribute("info", info);
+            UserInsertDto newUserDto = new UserInsertDto();
+            model.addAttribute("user", newUserDto);
+            return "views/auth/login";
+        } else if(!userWasInsert){
             info.setTitle("Error al crear la cuenta");
             info.setMessage("Los datos ingresados son erróneos");
             info.setTypeToast("error");
@@ -118,7 +114,8 @@ public class LoginController {
             return "views/auth/login";
         }
 
-        return "redirect:/login";
+        return "views/auth/login";
+       
     }
 
 }

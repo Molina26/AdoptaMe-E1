@@ -15,51 +15,66 @@
         <div class="container" id="container">
             <!--Formulario de registro-->
             <div class="form-container sign-up-container">
-                <!-- <form action="#">
-                    <h1 class="h1sing">Crear Cuenta</h1>
+                <form th:action="@{/create-acount}" method="post" th:object="${user}">
+                    
                     <label class="label">Nombre</label>
-                    <input type="text" name="name" placeholder="Nombre" />
+                    <input type="text" name="name" placeholder="Nombre" th:value="${user.name}" required />
+                    <div class="form-text text-danger" th:if="${errors != null && errors.get('name') != null}">
+                        <span th:each="error: ${errors.get('name')}">
+                            [[${error}]]
+                            <br>
+                        </span>
+                    </div>
+
                     <label class="label">Primer apellido</label>
-                    <input type="text" name="first_lastname" placeholder="Primer apellido" />
+                    <input type="text" name="first_lastname" placeholder="Primer apellido" th:field="*{firstLastname}" required />
+                    <div class="form-text text-danger" th:if="${errors != null && errors.get('firstLastname') != null}">
+                        <span th:each="error: ${errors.get('firstLastname')}">
+                            [[${error}]]
+                            <br>
+                        </span>
+                    </div>
+
                     <label class="label">Segundo apellido</label>
-                    <input type="text" name="second_lastname" placeholder="Segundo apellido" />
+                    <input type="text" name="second_lastname" placeholder="Segundo apellido" th:field="*{secondLastname}" required />
+                    <div class="form-text text-danger " th:if="${errors != null && errors.get('secondLastname') != null}">
+                        <span th:each="error: ${errors.get('secondLastname')}">
+                            [[${error}]]
+                            <br>
+                        </span>
+                    </div>
+
+                    <label class="label">Username</label>
+                    <input type="text" name="username" placeholder="Usuario" th:value="${user.username}" required />
+                    <div class="form-text text-danger " th:if="${errors != null && errors.get('username') != null}">
+                        <span th:each="error: ${errors.get('username')}">
+                            [[${error}]]
+                            <br>
+                        </span>
+                    </div>
+
                     <label class="label">Soy...</label>
                     <div>
                         <label class="radio" for="inlineRadio1"><input class="form-check-input" type="radio" name="rol"
-                                value="adoptador">Adoptador</label>
+                                th:value="ROLE_ADOPTADOR" th:field="*{role.name}" >Adoptador</label>
                         <label class="radio" for="inlineRadio2"><input class="form-check-input" type="radio" name="rol"
-                                value="option2">Voluntario</label>
+                                th:value="ROLE_VOLUNTARIO" th:field="*{role.name}">Voluntario</label>
                     </div>
-                    <label class="label">Correo electrónico</label>
-                    <input type="email" name="email" placeholder="Email" />
+                    <div class="form-text text-danger " th:if="${errors != null && errors.get('role') != null}">
+                        <span th:each="error: ${errors.get('role')}">
+                            [[${error}]]
+                            <br>
+                        </span>
+                    </div>
+
+                  
                     <label class="label">Contraseña</label>
-                    <input type="password" name="password" placeholder="Contraseña" />
+                    <input type="password" name="password" placeholder="Contraseña" th:field="*{password}" onchange="validPassword()" id="password" required />
                     <label class="label">Confirmar contraseña</label>
-                    <input type="password" name="password" placeholder="Confirmar Contraseña" />
-                    <button>Registrar</button> ======= -->
-                <form th:action="@{/create-acount}" method="post" th:object="${user}">
-
-                    <input type="text" name="name" placeholder="Nombre" th:value="${user.name}" required />
-                    <input type="text" name="first_lastname" placeholder="Primer apellido" th:field="*{firstLastname}" required />
-                    <input type="text" name="second_lastname" placeholder="Segundo apellido" th:field="*{secondLastname}" required />
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" name="username" placeholder="Usuario" th:value="${user.username}" required />
-                        </div>
-                        <label class="label">Soy...</label>
-                        <div>
-                            <label class="radio" for="inlineRadio1"><input class="form-check-input" type="radio"
-                                        name="rol" value="adoptador">Adoptador</label>
-                            <label class="radio" for="inlineRadio2"><input class="form-check-input" type="radio"
-                                        name="rol" value="option2">Voluntario</label>
-                        </div>
-
-
-                    </div>
-                    <input type="password" name="password" placeholder="Contraseña" th:value="${user.password}" onchange="validPassword()" id="password" required />
-                    <input type="password" name="password" placeholder="Confirmar Contraseña" onchange="validPassword()" id="confirmPassword" required />
+                    <input type="password" name="password" placeholder="Confirmar Contraseña"   onchange="validPassword()" id="confirmPassword" required />
                     <button type="submit" id="buttonRegister" onclick="validPassword()">Registrar</button>
-                </form>
+                </form> 
+              
             </div>
             <!--Inicio de sesion perro-->
             <div class="form-container sign-in-container">
@@ -221,14 +236,12 @@
                 submitButton.attr('disabled', true);
                 $("#password").addClass('is-invalid');
                 $("#confirmPassword").addClass('is-invalid');
-                $(".alertPass").attr('hidden', false);
-                event.preventDefault();
-                return;
             } else {
                 $("#password").removeClass("is-invalid");
                 $("#confirmPassword").removeClass("is-invalid");
-                $(".alertPass").attr('hidden', true);
                 submitButton.attr('disabled', false);
+                
+
             }
         }
     </script>

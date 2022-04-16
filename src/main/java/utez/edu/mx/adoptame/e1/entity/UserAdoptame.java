@@ -133,5 +133,9 @@ public class UserAdoptame {
     public void setFavoritesPets(Set<Pet> favoritesPets) {
         this.favoritesPets = favoritesPets;
     }
+
+ 
+
+    
 }
 

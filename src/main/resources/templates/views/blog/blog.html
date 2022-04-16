@@ -43,6 +43,7 @@
                     <span></span>
                 </div>
                 <div class="design-title">
+                    <p style="font-size: 17px;"><span style="font-size: 20px;">[[${item.title}]]</span></p>
                     <p style="font-size: 17px;">Fecha publicación: <span style="font-size: 14px;">[[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]</span></p>
                     <p style="font-size: 17px;">Escrito por: <span style="font-size: 17px;">[[${item.user.name}]] [[${item.user.firstLastname}]] [[${item.user.secondLastname}]]</span></p>
                     <a th:href="@{/blog/find_details_blog/{id}/true (id=${item.id})}">Ver completo</a>
