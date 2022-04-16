@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import utez.edu.mx.adoptame.e1.entity.Blog;
-import utez.edu.mx.adoptame.e1.entity.Pet;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogInsertDto;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
-import utez.edu.mx.adoptame.e1.service.BlogService;
 import utez.edu.mx.adoptame.e1.service.BlogServiceImpl;
 import utez.edu.mx.adoptame.e1.util.ImageManager;
 import utez.edu.mx.adoptame.e1.util.InfoMovement;
@@ -92,15 +90,12 @@ public class BlogController {
         infoMovement.setModuleName(MODULE_NAME);
 
      
-
         if(!validation.isEmpty()){
             model.addAttribute("errors", validation);
-            logger.info("error in validation or image empty");
             return "views/blog/blogForm";
         }
 
         if(blog.getPrincipal() && image.isEmpty()){
-            logger.info("INVALIDA"); 
             model.addAttribute("errors", validation);
             model.addAttribute("fileError", MESSAGE_FILE_NOT_SELECTED);
             model.addAttribute("blog", blog);      
@@ -179,7 +174,6 @@ public class BlogController {
 
         if(blogExists.isPresent()){
             if(flag.equals("true") || flag.equals("false")){
-                logger.info("Blog  "+ blogExists.toString());
                 model.addAttribute("blog", blogExists.get());
                 model.addAttribute("flag" , Boolean.parseBoolean(flag));
     
@@ -240,7 +234,6 @@ public class BlogController {
 
               
                                
-                                logger.info("UPDATE BLOG ADMIN -> "+ blogUpdateDto.toString());
         InfoToast info = new InfoToast();
 
         boolean errorInsertImage = false;
@@ -253,7 +246,6 @@ public class BlogController {
         Optional<Blog> blogExists = blogService.findBlogById(blogUpdateDto.getId());
         Map<String, List<String>> validationsInUpdate = blogService.getValidationToUpdateBlog(blogUpdateDto);
        
-       logger.info("BLOG EXIST-> AND IS PRESENT  " + blogExists.get().toString() +  "  "+ blogExists.isPresent() +"  ave  " + blogExists.isEmpty());
 
         if (!blogExists.isPresent()) {
             info.setTitle("Blog no valido");
@@ -265,7 +257,6 @@ public class BlogController {
         }
 
         if(blogUpdateDto.getPrincipal() && imageF.isEmpty() && (blogUpdateDto.getImage()==null)){
-            logger.info("INVALIDA update"); 
             model.addAttribute("errors", validationsInUpdate);
             model.addAttribute("fileError", MESSAGE_FILE_NOT_SELECTED);
             model.addAttribute("blog", blogUpdateDto);
@@ -275,8 +266,6 @@ public class BlogController {
         if(!validationsInUpdate.isEmpty()){
             model.addAttribute("errors",validationsInUpdate);
             model.addAttribute("blog", blogUpdateDto);
-
-            logger.info("DIFERENTE DE ISEMPTY (9 UPDATE)  ");
             return "views/blog/blogFormUpdate";
         }
 
@@ -298,7 +287,7 @@ public class BlogController {
              imageName = (errorInsertImage ? null : imageManager.insertImage(imageF));
 
             if(imageName == null){
-                 logger.info("IMAGE UPDATE  ERROR )  ");
+            
 
                 info.setTitle("Error de imagen al guardar");
                 info.setMessage("Sucedió un error al intentar guardar la imagen, revisar nombre del archivo, no puede contener espacios o acentos");
@@ -306,7 +295,7 @@ public class BlogController {
 
                 model.addAttribute("fileError", MESSAGE_FILE_NOT_SELECTED);
                 model.addAttribute("info", info);
-                 model.addAttribute("blog", blogUpdateDto);
+                model.addAttribute("blog", blogUpdateDto);
 
                 return "views/blog/blogFormUpdate";
             }
@@ -316,30 +305,12 @@ public class BlogController {
                 imageName = null;
 
         }
-        
 
-       /* if(!imageF.isEmpty()){
-            logger.info("DIFERENTE DE IMAGE EMPTY 1 (9 UPDATE)  ");
-            String imageName = imageManager.insertImage(imageF);
-
-            logger.info("DIFERENTE DE IMAGE EMPTY 2 (9 UPDATE)  ");
-            if(imageName == null){
-                info.setTitle("Error de imagen al actualizar");
-                info.setMessage("Sucedio un error al intentar guardar la imagen");
-                info.setTypeToast("error");
-
-                model.addAttribute("fileError",MESSAGE_FILE_NOT_SELECTED);
-                model.addAttribute("info",info);
-
-                return "views/blog/blogFormUpdate";
-            }
-            blogUpdateDto.setImage(imageName);
-        }*/
 
         boolean blogWasUpdated = blogService.updateBlog(blogUpdateDto);
 
         if(blogWasUpdated){
-            logger.info("BLOG UPDATE ");
+           
             info.setTitle("Blog actualizado");
             info.setMessage("Se actualizó el blog ".concat(blogUpdateDto.getTitle()).concat(" correctamente"));
             info.setTypeToast("success");

@@ -63,7 +63,6 @@ public class BlogServiceImpl implements BlogService{
 
         UserAdoptame user = userAdoptameRepository.findUserByUsername(username);
 
-        logger.info("BLOGDTO  "+ blogDto.toString());
         if(user != null){
             Blog blog = new Blog();
 
@@ -71,11 +70,6 @@ public class BlogServiceImpl implements BlogService{
             blog.setIsPrincipal(blogDto.getPrincipal());
             blog.setImage(imageName);
             blog.setUser(user);
-           
-
-            logger.info("INFOR BLOG BEFORE INSERT  " + blog.toString());
-
-
             try{
                 Blog blogInsertedBd = blogRepository.save(blog);
 
@@ -112,10 +106,7 @@ public class BlogServiceImpl implements BlogService{
                 Blog blogUpdate = new Blog();
                 BeanUtils.copyProperties(blogDataRegistered.get(), blogUpdate);
                 BeanUtils.copyProperties(blogDto, blogUpdate);
-                logger.info("INFOR BEFORE DTO UPDATE " + blogDto.toString());
-                logger.info("INFOR BEFORE UPDATE " + blogUpdate.toString());
                 blogUpdate.setIsPrincipal(blogDto.getPrincipal());
-
 
                 Blog blogisUpdated = blogRepository.save(blogUpdate);
 
@@ -152,7 +143,6 @@ public class BlogServiceImpl implements BlogService{
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
-                logger.info("Error -->" + error.toString());
                 if(errors.get(key) != null){
                     errors.get(key).add(message);
                 }else{
@@ -166,7 +156,6 @@ public class BlogServiceImpl implements BlogService{
 
     public Map<String, List<String>> getValidationToUpdateBlog(BlogUpdateDto blogDto) {
         Set<ConstraintViolation<BlogUpdateDto>> violations = validator.validate(blogDto);
-        logger.info("Error INITIAL -->" + violations.size());
         Map<String, List<String>> errors = new HashMap<>();
 
         if (!violations.isEmpty()) {
@@ -177,7 +166,6 @@ public class BlogServiceImpl implements BlogService{
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
-                logger.info("Error -->" + error.toString());
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {

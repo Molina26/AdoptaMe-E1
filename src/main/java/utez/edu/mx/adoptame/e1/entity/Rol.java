@@ -2,6 +2,8 @@ package utez.edu.mx.adoptame.e1.entity;
 
 import lombok.Data;
 
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,4 +16,7 @@ public class Rol {
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+    @ManyToMany(mappedBy = "rol")
+    private Set<UserAdoptame> users;
 }

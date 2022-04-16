@@ -82,12 +82,22 @@ form {
 	justify-content: center;
 	flex-direction: column;
 	padding: 0 50px;
-	height: 100%;
+	height: 99%;
 	text-align: center;
 }
 
 input {
 	background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+	border-radius: 30px;
+	font-weight: bold;
+}
+
+select{
+  background-color: #eee;
 	border: none;
 	padding: 12px 15px;
 	margin: 8px 0;
