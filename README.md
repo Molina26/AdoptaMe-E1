@@ -71,4 +71,4 @@ Cuando hayas ejecutado la aplicación, es necesario ejecutar las siguientes sent
 >INSERT INTO authorities (username, authority) VALUES 
         (1,1),(2,2),(3,3);
 
-Con lo anterior podrás acceder mediante el usuario y contraseña "adno12345".
+Con lo anterior podrás acceder mediante el usuario y contraseña "adno1234".
