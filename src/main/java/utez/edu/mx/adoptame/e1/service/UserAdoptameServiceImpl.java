@@ -3,9 +3,6 @@ package utez.edu.mx.adoptame.e1.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import utez.edu.mx.adoptame.e1.entity.DetailUserinfo;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.entity.Role;
@@ -13,7 +10,6 @@ import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
 import java.util.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import utez.edu.mx.adoptame.e1.repository.DetailUserInfoRepository;
 import utez.edu.mx.adoptame.e1.repository.RolRepository;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
@@ -73,7 +69,6 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
 
                 BeanUtils.copyProperties(userDto, user);
                 BeanUtils.copyProperties(userDto, details);
-                logger.info("LOGER DETAILS "+ details.toString());
 
                 user.setEnabled(true);
                 user.getRoles().add(rol.get());
@@ -111,7 +106,6 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
                 Path path = error.getPropertyPath();
                 String key = path.toString();
                 String message = error.getMessage();
-                logger.info("Error " + error.getPropertyPath().toString()+"   " +error.getMessage() );
                 if (errors.get(key) != null) {
                     errors.get(key).add(message);
                 } else {

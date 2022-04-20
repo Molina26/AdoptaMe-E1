@@ -1,7 +1,5 @@
 package utez.edu.mx.adoptame.e1.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -72,8 +70,6 @@ public class PetController {
     private final String MODULE_NAME = "PETS";
 
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
-
-    private final Logger logger = LoggerFactory.getLogger(PetController.class);
 
 
     public PetController(PetServiceImpl petService,
