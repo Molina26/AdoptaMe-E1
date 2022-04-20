@@ -10,17 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import utez.edu.mx.adoptame.e1.entity.Blog;
-import utez.edu.mx.adoptame.e1.entity.Color;
-import utez.edu.mx.adoptame.e1.entity.Personality;
-import utez.edu.mx.adoptame.e1.entity.Pet;
-import utez.edu.mx.adoptame.e1.entity.Size;
+import utez.edu.mx.adoptame.e1.entity.*;
 import utez.edu.mx.adoptame.e1.enums.TracingRegisterPet;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetInsertDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetSearchDto;
@@ -28,12 +25,8 @@ import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 import utez.edu.mx.adoptame.e1.model.responses.InfoToast;
 
-import utez.edu.mx.adoptame.e1.service.PersonalityServiceImpl;
-import utez.edu.mx.adoptame.e1.service.PetServiceImpl;
-import utez.edu.mx.adoptame.e1.service.SizeServiceImpl;
+import utez.edu.mx.adoptame.e1.service.*;
 import utez.edu.mx.adoptame.e1.util.*;
-import utez.edu.mx.adoptame.e1.service.BlogServiceImpl;
-import utez.edu.mx.adoptame.e1.service.ColorServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +46,10 @@ public class PetController {
     private final SizeServiceImpl sizeService;
 
     private final BlogServiceImpl blogService;
+
+    private final RolServiceImpl rolService;
+
+    private final UserAdoptameServiceImpl userAdoptameService;
 
     private final ImageManager imageManager;
 
@@ -84,6 +81,8 @@ public class PetController {
             PersonalityServiceImpl personalityService,
             SizeServiceImpl sizeService,
             BlogServiceImpl blogService,
+            RolServiceImpl rolService,
+            UserAdoptameServiceImpl userAdoptameService,
             ImageManager imageManager,
             InfoMovement infoMovement,
             GeneralInfoApp generalInfoApp) {
@@ -93,6 +92,8 @@ public class PetController {
         this.personalityService = personalityService;
         this.sizeService = sizeService;
         this.blogService = blogService;
+        this.rolService  = rolService;
+        this.userAdoptameService = userAdoptameService;
         this.imageManager = imageManager;
         this.infoMovement = infoMovement;
         this.generalInfoApp = generalInfoApp;
@@ -458,24 +459,79 @@ public class PetController {
     @GetMapping("/add-favorite/{id}")
     public String addFavoritePet (@PathVariable("id") Long id, Model model, Authentication auth){
         List<Blog> blogs = blogService.findAllByIsPrincipal(true);
-        boolean flagRegister = (blogs.size() > 0) ?  true : false;
-
         InfoToast info = new InfoToast();
+        boolean flagRegister = (blogs.size() > 0) ?  true : false;
+        boolean flag = false;
+        boolean petAddedFavorite = false;
+        model.addAttribute("listBlogs",blogs);
+        model.addAttribute("flagRegister",flagRegister);
+        model.addAttribute("listPets" , petService.findTop9ByOrderByCreatedAtDesc());
+
+
             if(auth == null){
                 info.setTitle("Error de agregación");
-                info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Voluntario");
+                info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Adoptador");
                 info.setTypeToast("error");
                 model.addAttribute("info", info);
-                model.addAttribute("listBlogs",blogs);
-                model.addAttribute("flagRegister",flagRegister);
-                model.addAttribute("listPets" , petService.findTop9ByOrderByCreatedAtDesc());
-
                  return "index";
-            }else {
-                
+            }
+
+        UserAdoptame user  = userAdoptameService.findUserByUsername(auth.getName());
+        Pet pet = petService.findPetById(id).get();
+            if(user.getId()!=0){
+                for (Role role :  user.getRoles()) {
+                    if(role.getName().equals("ROLE_ADOPTADOR")){
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) {
+                    user.getFavoritesPets().add(pet);
+                    petAddedFavorite = userAdoptameService.saveUser(user);
+                    if(petAddedFavorite){
+                        info.setTitle("Mascota Agregada");
+                        info.setMessage("La Mascota " + pet.getName()  + " fue agregada a favoritos, revisar su panel de favoritos");
+                        info.setTypeToast("success");
+                        model.addAttribute("info", info);
+                    }
+
+                }else if(!flag){
+                    info.setTitle("Error de agregación");
+                    info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Adoptador");
+                    info.setTypeToast("error");
+                    model.addAttribute("info", info);
+                }
             }
 
         return "index";
+    }
+
+    @GetMapping("/favorite" )
+    @Secured({"ROLE_ADOPTADOR"})
+    public String findAllPetFavoriteByUserAdoptador(Model model, Authentication auth, @RequestParam(name="page", defaultValue = "0") int page){
+        InfoToast info = new InfoToast();
+        UserAdoptame user =  userAdoptameService.findUserByUsername(auth.getName());
+
+
+
+       /* int itemsByPage = 1;
+
+
+        Pageable pageRequest = PageRequest.of(page, itemsByPage);
+        Page<Pet> pets = user.getFavoritesPets();
+        PageRender<Blog> pageRender = new PageRender<>("/pets/favorite", blogs);
+        */
+
+
+        info.setTitle("Error de agregación");
+        info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Adoptador");
+        info.setTypeToast("error");
+        model.addAttribute("info", info);
+        model.addAttribute("pets", user.getFavoritesPets());
+
+
+       return "/views/favorite/petFavorite";
+
     }
 
 

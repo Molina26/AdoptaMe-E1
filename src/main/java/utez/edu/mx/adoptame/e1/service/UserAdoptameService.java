@@ -12,4 +12,6 @@ public interface UserAdoptameService {
     Optional<UserAdoptame> findUserById(Long id);
 
     UserAdoptame findUserByUsername(String username);
+
+    boolean saveUser(UserAdoptame user);
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<header th:replace="~{fragments/head :: head}">
+</header>
+<body>
+
+<div th:insert="~{fragments/infoToast :: infoToast}">
+</div>
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+
+    <div class="container">
+        <form th:action="@{/user/update}" th:object="${user}" method="post">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Perfill de usuario</h1>
+                </div>
+                    <div class="col-4">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control"  th:field="*{name}" placeholder="Nombre"/>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">Primer Apellido</label>
+                        <input type="text" class="form-control"  th:field="*{firstLastname}"  placeholder="Primer Apellido"/>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">Segundo Apellido</label>
+                        <input type="text" class="form-control"  th:field="*{secondLastname}" placeholder="Segundo Apellido"/>
+                    </div>
+
+                <div class="col-12">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" disabled th:field="*{username}">
+                </div>
+
+                <div class="col-12 text-center mt-5">
+                    <button class="btn btn-primary" type="submit">Actualizar Información</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+
+<div th:replace="~{fragments/footerBlog :: footer}"></div>
+
+</body>
+</html>

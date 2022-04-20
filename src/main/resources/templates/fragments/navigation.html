@@ -41,6 +41,17 @@
                             <a class="nav-link text-white" th:href="@{/blog/general}">Noticias General</a>
                         </li>
                     </div>
+                    <div sec:authorize="isAuthenticated() && hasRole('ROLE_ADOPTADOR')">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" th:href="@{/pets/favorite}">Favoritos</a>
+                        </li>
+                    </div>
+                    <div sec:authorize="isAuthenticated() && hasRole('ROLE_ADOPTADOR')">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" th:href="@{/user/details}">Perfil</a>
+                        </li>
+                    </div>
+
                 </ul>
                 <div class="d-flex">
                     <div sec:authorize="!isAuthenticated()">

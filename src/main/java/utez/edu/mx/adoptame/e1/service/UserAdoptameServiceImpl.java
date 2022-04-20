@@ -100,4 +100,13 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
         }
         return errors;
     }
+
+    @Override
+    public boolean saveUser(UserAdoptame user) {
+        UserAdoptame userAdoptame = userAdoptameRepository.save(user);
+        if(userAdoptame.getId() != 0){
+            return true;
+        }
+        return false;
+    }
 }
