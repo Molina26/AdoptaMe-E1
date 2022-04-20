@@ -42,8 +42,29 @@
           </div>
 
         <!--Finish carousel-->
+
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-12 mt-5" th:each="item : ${listPets}">
+          <div class="card" style="width: 18rem;">
+            <img th:src="@{/uploads/{image} (image=${item.image})}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <span><span class="badge bg-info">[[${item.type}]] </span> &nbsp; &nbsp; &nbsp;  Añadido el [[${#dates.format(item.createdAt, 'dd-MMM-yyyy')}]] </span>
+              <h5 class="card-title">[[${item.name}]]</h5>
+              <p class="card-text">Sexo: [[${item.sex}]]<br/>              Edad: [[${item.age}]]
+              Tamaño: [[${item.size.name}]]<br/>
+              Caracter: [[${item.personality.name}]]<br/>
+              Color: [[${item.color.name}]]</p>
+              <a th:href="@{/pets/add-favorite/{id} (id=${item.id})}" class="btn btn-primary text-center">Añadir a Favoritos</a>
+            </div>
+          </div>
+        </div>
+
+        
     </div>
-   
+  </div>
+    
+  
+
 
     <div th:replace="~{fragments/footerBlog :: footer}">
 

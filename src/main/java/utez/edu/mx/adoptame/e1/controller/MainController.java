@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import utez.edu.mx.adoptame.e1.entity.Blog;
 import utez.edu.mx.adoptame.e1.service.BlogServiceImpl;
+import utez.edu.mx.adoptame.e1.service.PetServiceImpl;
 
 @Controller
 public class MainController {
     private final BlogServiceImpl blogService;
+    private final PetServiceImpl petService;
 
-    public MainController(BlogServiceImpl blogService){
+    public MainController(BlogServiceImpl blogService, PetServiceImpl petService){
         this.blogService = blogService;
+        this.petService = petService;
     }
 
     @GetMapping({"/", "/index"})
@@ -24,6 +27,9 @@ public class MainController {
 
         model.addAttribute("listBlogs",blogs);
         model.addAttribute("flagRegister",flagRegister);
+
+        model.addAttribute("listPets" , petService.findTop9ByOrderByCreatedAtDesc());
+
         return "index";
     }
 }

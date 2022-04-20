@@ -296,4 +296,10 @@ public class PetServiceImpl implements PetService {
         }
         return errors;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pet> findTop9ByOrderByCreatedAtDesc() {             
+        return petRepository.findTop9ByOrderByCreatedAtAsc();
+    }
 }

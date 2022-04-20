@@ -1,5 +1,8 @@
 package utez.edu.mx.adoptame.e1.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import utez.edu.mx.adoptame.e1.entity.Blog;
 import utez.edu.mx.adoptame.e1.entity.Color;
 import utez.edu.mx.adoptame.e1.entity.Personality;
 import utez.edu.mx.adoptame.e1.entity.Pet;
@@ -28,6 +32,7 @@ import utez.edu.mx.adoptame.e1.service.PersonalityServiceImpl;
 import utez.edu.mx.adoptame.e1.service.PetServiceImpl;
 import utez.edu.mx.adoptame.e1.service.SizeServiceImpl;
 import utez.edu.mx.adoptame.e1.util.*;
+import utez.edu.mx.adoptame.e1.service.BlogServiceImpl;
 import utez.edu.mx.adoptame.e1.service.ColorServiceImpl;
 
 import java.util.ArrayList;
@@ -46,6 +51,8 @@ public class PetController {
     private final PersonalityServiceImpl personalityService;
 
     private final SizeServiceImpl sizeService;
+
+    private final BlogServiceImpl blogService;
 
     private final ImageManager imageManager;
 
@@ -69,10 +76,14 @@ public class PetController {
 
     private final String MESSAGE_FILE_NOT_SELECTED = "Debe de seleccionar una imagen";
 
+    private final Logger logger = LoggerFactory.getLogger(PetController.class);
+
+
     public PetController(PetServiceImpl petService,
             ColorServiceImpl colorService,
             PersonalityServiceImpl personalityService,
             SizeServiceImpl sizeService,
+            BlogServiceImpl blogService,
             ImageManager imageManager,
             InfoMovement infoMovement,
             GeneralInfoApp generalInfoApp) {
@@ -81,6 +92,7 @@ public class PetController {
         this.colorService = colorService;
         this.personalityService = personalityService;
         this.sizeService = sizeService;
+        this.blogService = blogService;
         this.imageManager = imageManager;
         this.infoMovement = infoMovement;
         this.generalInfoApp = generalInfoApp;
@@ -441,5 +453,30 @@ public class PetController {
             this.listSizes = sizeService.findAllSizes();
         }
     }
+
+    
+    @GetMapping("/add-favorite/{id}")
+    public String addFavoritePet (@PathVariable("id") Long id, Model model, Authentication auth){
+        List<Blog> blogs = blogService.findAllByIsPrincipal(true);
+        boolean flagRegister = (blogs.size() > 0) ?  true : false;
+
+        InfoToast info = new InfoToast();
+            if(auth == null){
+                info.setTitle("Error de agregación");
+                info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Voluntario");
+                info.setTypeToast("error");
+                model.addAttribute("info", info);
+                model.addAttribute("listBlogs",blogs);
+                model.addAttribute("flagRegister",flagRegister);
+                model.addAttribute("listPets" , petService.findTop9ByOrderByCreatedAtDesc());
+
+                 return "index";
+            }else {
+                
+            }
+
+        return "index";
+    }
+
 
 }

@@ -8,6 +8,7 @@ import utez.edu.mx.adoptame.e1.model.request.pet.PetSearchDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetTracingRegisterDto;
 import utez.edu.mx.adoptame.e1.model.request.pet.PetUpdateDto;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PetService {
@@ -28,4 +29,5 @@ public interface PetService {
 
     boolean changeAvailableAdoptionPet(Long id, Boolean AvailableAdoptionPet);
 
+    List<Pet>findTop9ByOrderByCreatedAtDesc();
 }

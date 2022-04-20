@@ -8,6 +8,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import utez.edu.mx.adoptame.e1.entity.Pet;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 @Repository
@@ -22,5 +24,7 @@ public interface PetRepository extends PagingAndSortingRepository<Pet, Long>{
    @Modifying
    @Query("UPDATE Pet p SET p.availableAdoption = ?2 WHERE p.id = ?1")
    int changeAvailableAdoptionPet(Long id, Boolean availableAdoption);
+
+   List<Pet> findTop9ByOrderByCreatedAtAsc();
 
 }
