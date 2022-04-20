@@ -67,11 +67,18 @@
                         </span>
                     </div>
 
-                  
+
+                    <label class="label">Dirección</label>
+                    <input type="text" name="addresss"  placeholder="Dirección" th:field="*{address}" />
+
+                    <label class="label">Telefono</label>
+                    <input type="text" name="phone" class="phone-mask" placeholder="( ___ ) - ___ - __ - __"  th:field="*{phone}" />
+
+
                     <label class="label">Contraseña</label>
                     <input type="password" name="password" placeholder="Contraseña" th:field="*{password}" onchange="validPassword()" id="password" required />
                     <label class="label">Confirmar contraseña</label>
-                    <input type="password" name="password" placeholder="Confirmar Contraseña"   onchange="validPassword()" id="confirmPassword" required />
+                    <input type="password" name="password" placeholder="Confirmar Contraseña"  onchange="validPassword()" id="confirmPassword" required />
                     <button type="submit" id="buttonRegister" onclick="validPassword()">Registrar</button>
                 </form> 
               
@@ -226,6 +233,14 @@
     </main>
     <div th:replace="~{fragments/footer :: footer}"></div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <script th:src="@{/js/jquery.mask.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.phone-mask').mask('(000)000-00-00');
+        });
+    </script>
+
 
     <script>
         function validPassword() {

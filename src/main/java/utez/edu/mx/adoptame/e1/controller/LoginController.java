@@ -67,11 +67,15 @@ public class LoginController {
     public String createAcount(Model model, UserInsertDto userDto, RedirectAttributes flash) {
         model.addAttribute("login", true);
 
+        String phone = userDto.getPhone().replaceAll("[\\s]", "").replaceAll("\\(", "").replaceAll("\\)", "")
+                .replaceAll("-", "");
+
+        userDto.setPhone(phone);
         InfoToast info = new InfoToast();
+
         Map<String, List<String>> validationsAcount = userAdoptameService.getValidationInsertUserAdoptame(userDto);
 
         String passwordFine = userDto.getPassword().substring(0,userDto.getPassword().indexOf(","));
-
         userDto.setPassword(passwordFine);
 
         if (!validationsAcount.isEmpty()) {

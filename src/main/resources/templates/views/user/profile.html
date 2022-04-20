@@ -31,7 +31,15 @@
 
                 <div class="col-12">
                     <label class="form-label">Username</label>
-                    <input type="text" class="form-control" disabled th:field="*{username}">
+                    <input type="text" class="form-control" disabled th:field="*{username}" >
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-control"  th:field="*{address}" placeholder="Dirección"/>
+                </div>
+                <div class="col-4">
+                    <label class="form-label">Telefono</label>
+                    <input type="text" class="form-control"  th:field="*{phone}" placeholder="Telefono"/>
                 </div>
 
                 <div class="col-12 text-center mt-5">

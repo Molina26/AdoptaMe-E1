@@ -205,6 +205,7 @@ public class BlogController {
             model.addAttribute("blog",blogInfoDto);
 
             return "views/blog/blogFormUpdate";
+
         }else if(blogExists.isPresent() && flag.equals("false")){
             blogExists.get().getUser().setPassword(null);
             blogExists.get().getUser().setUsername(null);

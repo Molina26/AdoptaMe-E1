@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import utez.edu.mx.adoptame.e1.entity.DetailUserinfo;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.entity.Role;
 import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
@@ -11,6 +14,7 @@ import java.util.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import utez.edu.mx.adoptame.e1.repository.DetailUserInfoRepository;
 import utez.edu.mx.adoptame.e1.repository.RolRepository;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
 import javax.validation.ConstraintViolation;
@@ -25,21 +29,32 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
     private final Logger logger = LoggerFactory.getLogger(UserAdoptameServiceImpl.class);
     private final UserAdoptameRepository userAdoptameRepository;
     private final RolRepository rolRepository;
+    private final DetailUserInfoRepository detailUserInfoRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserAdoptameServiceImpl(
             UserAdoptameRepository userAdoptameRepository, Validator validator, RolRepository rolRepository,
+            DetailUserInfoRepository detailUserInfoRepository,
             PasswordEncoder passwordEncoder) {
         this.userAdoptameRepository = userAdoptameRepository;
         this.validator = validator;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
+        this.detailUserInfoRepository = detailUserInfoRepository;
     }
 
     @Override
     public UserAdoptame findUserByUsername(String username) {
-
         return userAdoptameRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public Optional <DetailUserinfo> findDetailsUserInfo(UserAdoptame user) {
+        Optional <DetailUserinfo> detail = detailUserInfoRepository.findDetailUserinfoByUser(user);
+        if(detail.isPresent()){
+            return detail;
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -51,18 +66,25 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
         if (rol.isPresent()) {
             if (rol.get().getName().equals("ROLE_ADOPTADOR") || rol.get().getName().equals("ROLE_VOLUNTARIO")) {
                 UserAdoptame user = new UserAdoptame();
+                DetailUserinfo details = new DetailUserinfo();
 
                 String passwordEcrypt = passwordEncoder.encode(userDto.getPassword());
                 userDto.setPassword(passwordEcrypt);
 
                 BeanUtils.copyProperties(userDto, user);
+                BeanUtils.copyProperties(userDto, details);
+                logger.info("LOGER DETAILS "+ details.toString());
+
                 user.setEnabled(true);
                 user.getRoles().add(rol.get());
-               
+                details.setUser(user);
+
                 try {
                     UserAdoptame userInsertedBd = userAdoptameRepository.save(user);
 
+
                     if (userInsertedBd.getId() != 0) {
+                        detailUserInfoRepository.save(details);
                         validInsert = true;    
                     }
                 } catch (Exception e) {

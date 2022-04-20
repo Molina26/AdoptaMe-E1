@@ -409,21 +409,27 @@ public class PetController {
         Map<String, List<String>> validationsUpdate = petService.getValidationToAcceptOrReject(pet);
 
         if (!validationsUpdate.isEmpty()) {
-            model.addAttribute("pet", petExisted.get());
-            model.addAttribute("errors", validationsUpdate);
-            model.addAttribute("petTracing", pet);
-            model.addAttribute("tracingOptions", TracingRegisterPet.values());
+            if(petExisted.isPresent()){
+                model.addAttribute("pet", petExisted.get());
+                model.addAttribute("errors", validationsUpdate);
+                model.addAttribute("petTracing", pet);
+                model.addAttribute("tracingOptions", TracingRegisterPet.values());
+            }
+
         } else {
             boolean petWasUpdated = petService.acceptOrRejectPet(pet);
 
             if (petWasUpdated) {
-                info.setTitle("Mascota ".concat(petExisted.get().getName()).concat(" actualizada"));
-                info.setMessage("Se asigno el valor de ".concat(pet.getIsAccepted()).concat(" correctamente"));
-                info.setTypeToast("success");
+                if(petExisted.isPresent()){
+                    info.setTitle("Mascota ".concat(petExisted.get().getName()).concat(" actualizada"));
+                    info.setMessage("Se asigno el valor de ".concat(pet.getIsAccepted()).concat(" correctamente"));
+                    info.setTypeToast("success");
 
-                flash.addFlashAttribute("info", info);
+                    flash.addFlashAttribute("info", info);
 
-                return "redirect:/pets/detail-admin/".concat(pet.getId().toString());
+                    return "redirect:/pets/detail-admin/".concat(pet.getId().toString());
+
+                }
 
             }
         }
@@ -477,30 +483,36 @@ public class PetController {
             }
 
         UserAdoptame user  = userAdoptameService.findUserByUsername(auth.getName());
-        Pet pet = petService.findPetById(id).get();
-            if(user.getId()!=0){
-                for (Role role :  user.getRoles()) {
-                    if(role.getName().equals("ROLE_ADOPTADOR")){
-                        flag = true;
-                        break;
+            Optional <Pet>  petOptional =  petService.findPetById(id);
+            if(petService.findPetById(id).isPresent()){
+
+                if(user.getId()!=0){
+                    for (Role role :  user.getRoles()) {
+                        if(role.getName().equals("ROLE_ADOPTADOR")){
+                            flag = true;
+                            break;
+                        }
                     }
-                }
-                if (flag) {
-                    user.getFavoritesPets().add(pet);
-                    petAddedFavorite = userAdoptameService.saveUser(user);
-                    if(petAddedFavorite){
-                        info.setTitle("Mascota Agregada");
-                        info.setMessage("La Mascota " + pet.getName()  + " fue agregada a favoritos, revisar su panel de favoritos");
-                        info.setTypeToast("success");
+                    if (flag) {
+                        if(petOptional.isPresent()){
+                            user.getFavoritesPets().add(petOptional.get());
+                            petAddedFavorite = userAdoptameService.saveUser(user);
+                            if(petAddedFavorite){
+                                info.setTitle("Mascota Agregada");
+                                info.setMessage("La Mascota " + petOptional.get().getName()  + " fue agregada a favoritos, revisar su panel de favoritos");
+                                info.setTypeToast("success");
+                                model.addAttribute("info", info);
+                            }
+                        }
+                    }else if(!flag){
+                        info.setTitle("Error de agregación");
+                        info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Adoptador");
+                        info.setTypeToast("error");
                         model.addAttribute("info", info);
                     }
-
-                }else if(!flag){
-                    info.setTitle("Error de agregación");
-                    info.setMessage("Para agregar a favoritos se debe inicar sesión con una cuenta de tipo Adoptador");
-                    info.setTypeToast("error");
-                    model.addAttribute("info", info);
                 }
+
+
             }
 
         return "index";

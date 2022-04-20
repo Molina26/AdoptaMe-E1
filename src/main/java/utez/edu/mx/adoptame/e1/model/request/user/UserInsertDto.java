@@ -33,6 +33,13 @@ public class UserInsertDto {
     @NotNull(message = "Debe de indicar el rol del usuario")
     private Role role;
 
+    @NotEmpty(message = "Debe de indicar un numero de usuario")
+    @Pattern(regexp = "[a-zA-Z0-9 ñáéíóúÁÉÍÓÚÑ]{3,30}", message = "Valor no aceptado")
+    private String phone;
+
+    @NotEmpty(message = "Debe de indicar una dirección")
+    @Pattern(regexp = "[a-zA-Z0-9 ñáéíóúÁÉÍÓÚÑ]{3,750}", message = "Valor no aceptado")
+    private String address;
     
     public UserInsertDto() {
     }
@@ -85,13 +92,34 @@ public class UserInsertDto {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "UserInsertDto [firstLastname=" + firstLastname + ", name=" + name + ", password=" + password + ", role="
-                + role + ", secondLastname=" + secondLastname + ", username=" + username + "]";
+    public String getPhone() {
+        return phone;
     }
 
-    
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
 
+    @Override
+    public String toString() {
+        return "UserInsertDto{" +
+                "name='" + name + '\'' +
+                ", firstLastname='" + firstLastname + '\'' +
+                ", secondLastname='" + secondLastname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
