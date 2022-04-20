@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:replace="~{fragments/head :: head}">
+</header>
+
+<body>
+<div th:replace="~{fragments/navigation :: navigation}">
+</div>
+
+<div class="container mt-3">
+    <h2>Detalle Mascota</h2>
+    <div th:insert="~{fragments/alert :: alerts}">
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-4 d-flex mb-2 justify-content-center align-items-center">
+            <img class="img-fluid border-2 border-dark" th:src="@{/uploads/{image}(image=${pet.image})}" alt="" />
+        </div>
+        <div class="col-12 col-md-8 border border-3 border-dark rounded p-2">
+            <div th:insert="~{fragments/infoPet :: infoPet}">
+
+            </div>
+            <div class="col-12 mt-2" sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:insert="~{fragments/formTracingPet :: petTracingForm}">
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}">
+</div>
+</body>
+
+</html>
