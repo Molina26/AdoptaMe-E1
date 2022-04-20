@@ -6,6 +6,7 @@ import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import java.util.Optional;
 
 import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
+import utez.edu.mx.adoptame.e1.model.request.user.UserUpdateDto;
 
 public interface UserAdoptameService {
     boolean saveUser(UserInsertDto user);
@@ -15,6 +16,7 @@ public interface UserAdoptameService {
     UserAdoptame findUserByUsername(String username);
 
     boolean saveUser(UserAdoptame user);
+    boolean updateUser(UserUpdateDto userUpdateDto);
     Optional <DetailUserinfo> findDetailsUserInfo(UserAdoptame user);
 
 }

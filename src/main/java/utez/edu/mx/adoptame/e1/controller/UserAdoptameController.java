@@ -3,6 +3,7 @@ package utez.edu.mx.adoptame.e1.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,8 @@ public class UserAdoptameController {
 
     @GetMapping("/update")
     @Secured({"ROLE_ADOPTADOR" })
-    public String updateUser(Model model, Authentication auth) {
+    public String updateUser(Model model, Authentication auth, UserUpdateDto userUpdateDto) {
+
 
 
         return "/views/user/profile";

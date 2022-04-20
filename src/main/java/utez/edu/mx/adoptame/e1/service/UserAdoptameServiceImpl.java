@@ -6,10 +6,12 @@ import org.springframework.beans.BeanUtils;
 import utez.edu.mx.adoptame.e1.entity.DetailUserinfo;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.entity.Role;
+import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
 import utez.edu.mx.adoptame.e1.model.request.user.UserInsertDto;
 import java.util.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import utez.edu.mx.adoptame.e1.model.request.user.UserUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.DetailUserInfoRepository;
 import utez.edu.mx.adoptame.e1.repository.RolRepository;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
@@ -124,5 +126,35 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean updateUser(UserUpdateDto userUpdateDto) {
+
+
+        return false;
+    }
+
+    public Map<String, List<String>> getValidationToUpdateUser(UserUpdateDto userUpdateDto) {
+        Set<ConstraintViolation<UserUpdateDto>> violations = validator.validate(userUpdateDto);
+        Map<String, List<String>> errors = new HashMap<>();
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<UserUpdateDto> error : violations) {
+
+                List<String> messages = new ArrayList<>();
+
+                Path path = error.getPropertyPath();
+                String key = path.toString();
+                String message = error.getMessage();
+                if (errors.get(key) != null) {
+                    errors.get(key).add(message);
+                } else {
+                    messages.add(message);
+                    errors.put(key, messages);
+                }
+            }
+        }
+        return errors;
     }
 }
