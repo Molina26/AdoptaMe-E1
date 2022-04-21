@@ -8,28 +8,17 @@
 
     <!-- Breadcrumb-------------- -->
     <div class="container">
-        <div class="col-lg-12 mt-5 mb-2">
-            <nav class="d-flex flex-row-reverse" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item" aria-current="page">ADOPTAME</li>
-                    <li class="breadcrumb-item" aria-current="page">NOTICIAS</li>
-                    <li class="breadcrumb-item active text-danger" aria-current="page">BLOG</li>
-                </ol>
-            </nav>
-        </div>
-
         <!-- Card-------------- -->
 
-        <div class="card" >
-            <div class="card-body">
-                <div class="row">
+  
+                <div class="row mt-5">
                     <div class="col-6">
-                        <h5 class="card-title">BLOGS</h5>
+                        <h2>BLOGS</h2>
                     </div>
                     <div class="col-6 text-end">
                         <a th:href="@{/blog/create}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Registrar</span></a>
                     </div>
-                    <hr class="mt-2"/>
+                   
                 </div>
                 <div class="row mt-3 table-responsive">
                     <div th:insert="~{fragments/alert :: alerts}">
@@ -54,7 +43,7 @@
                                     <td><span class=" d-none d-sm-none d-md-none d-lg-inline d-xl-inline">[[${#dates.format(item.createdAt, 'dd-MM-yyyy HH:MM')}]]</span> </td>
                                     <td> [[${item.isPrincipal == true ? "Si" : "No"}]]</td>
                                     <td> [[${item.user.name}]]</td>
-                                    <td class="text-end"> <a th:href="@{/blog/find_update/{id}/true (id=${item.id})}" class="btn btn-primary"><i class="bi bi-pencil-square"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Actualizar</span></a>
+                                    <td class="text-center"> <a th:href="@{/blog/find_update/{id}/true (id=${item.id})}" class="btn btn-primary"><i class="bi bi-pencil-square"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Actualizar</span></a>
                                         <a th:href="@{/blog/managment/details/{id}/false (id=${item.id})}" class="btn btn-primary"><i class="bi bi-eye"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline">Detalles</span></a> </td>
                                     
                                 </tr>
@@ -65,8 +54,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
     <div th:replace="~{fragments/footerBlog :: footer}"></div>
 </body>
 </html>

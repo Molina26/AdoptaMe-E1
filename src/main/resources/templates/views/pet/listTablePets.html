@@ -13,7 +13,7 @@
         <div class="row">
             <h2 class="col-6">Mascotas</h2>
             <div class="col-6 d-flex py-1 justify-content-end" sec:authorize="hasRole('ROLE_VOLUNTARIO')">
-                <a class="btn btn-primary" th:href="@{/pets/create}">Registrar mascota</a>
+                <a class="btn btn-primary" th:href="@{/pets/create}"><i class="bi bi-plus-lg"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Registrar mascota</span></a>
             </div>
         </div>
 
@@ -41,8 +41,8 @@
                         <td>Mark</td>
                         <td>Otto</td>
                         <td class="row">
-                            <div class="col">
-                                <a class="btn btn-warning" th:href="@{/pets/find_update/{id}(id=${item.id})}">Actualizar</a>
+                            <div class="col-12">
+                                <a class="btn btn-warning" th:href="@{/pets/find_update/{id}(id=${item.id})}"> <i class="bi bi-pencil-square"></i> <span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Actualizar</span></a>
                             </div>
                         </td>
                     </tr>

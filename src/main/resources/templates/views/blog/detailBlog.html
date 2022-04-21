@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" th:href="@{/css/blog.css}">
-    <link rel="stylesheet" th:href="@{/icons/bootstrap-icons.css}">
 
-</head>
-
+    <header th:insert="~{fragments/headBlog :: head}"></header>
 <body>
 <div th:insert="~{fragments/infoToast :: infoToast}">
 </div>
@@ -19,47 +11,47 @@
 
 <!-- header -->
 <div th:each="item : ${blog}" class="mb-5">
-    <header id="info2">
-        <div class="banner">
-            <div class="container">
-                <h1 class="banner-title">
-                    <span></span> [[${item.title}]]
-                </h1>
-            </div>
-        </div>
-    </header>
+   
     <!-- end of header -->
 
     <!-- design -->
-    <section class="design" id="design">
+    
         <div class="container">
-            <div class="title">
-                <h2>Escrito por: [[${item.user.name}]] [[${item.user.firstLastname}]]
-                    [[${item.user.secondLastname}]]</h2>
-                <p>Fecha publicaciónn [[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]</p>
-            </div>
 
-                <!-- item -->
+            <div class="card mt-5 shadow-lg p-3 mb-5 bg-body rounded">
+            <div class="card-header text-center fs-2">
+                [[${item.title}]]
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-end">Autor: [[${item.user.name}]] [[${item.user.firstLastname}]]
+                    [[${item.user.secondLastname}]]</h5>
                 <div class="row">
-                    <div class="col-4 align-content-center" >
-                        <img class="img-info" id="img-info"  th:src="@{/uploads/{image} (image=${item.image})}"  height="200px"
-                             width="300px" th:if="${item.image != null}">
-                    </div>
-
-                    <div class="design-text-info col-8">
-                        <p th:utext="${item.content}"></p>
+                    <div class="col-12">
+                        <p class="card-text" th:utext="${item.content}"></p>
                     </div>
                 </div>
-                <!-- end of item -->
-            <div class="row mt-5">
-                <div class="col-12 text-end">
-                    <a th:href="@{/blog/general}"  th:if="${flag == true}" class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
-                    <a th:href="@{/}"  th:if="${flag == false}"  class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
+              
+                <div class="text-center">               
+                        <img class="card-img-bottom shadow p-3 mb-5 bg-body rounded" style="width: 35rem; height: 25rem;" th:src="@{/uploads/{image} (image=${item.image})}"  
+                         th:if="${item.image != null}" alt="Este Blog No tiene Imagen">
                 </div>
-               
+                
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <a th:href="@{/blog/general}"  th:if="${flag == true}" class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
+                        <a th:href="@{/}"  th:if="${flag == false}"  class="btn btn-primary"> <i class="bi bi-arrow-left"></i><span class="d-none d-sm-none d-md-none d-lg-inline d-xl-inline"> Regresar</span> </a>
+        
+                    </div>
+                </div>
             </div>
+            <div class="card-footer text-muted text-center">
+                Fecha de publicación [[${#dates.format(item.createdAt, 'dd-MM-yyyy')}]]
+            </div>
+            </div>
+
+           
         </div>
-    </section>
+    
     <!-- end of design -->
 </div>
 

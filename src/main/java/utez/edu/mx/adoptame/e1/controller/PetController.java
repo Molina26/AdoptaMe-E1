@@ -516,7 +516,7 @@ public class PetController {
 
     @GetMapping("/favorite" )
     @Secured({"ROLE_ADOPTADOR"})
-    public String findAllPetFavoriteByUserAdoptador(Model model, Authentication auth, @RequestParam(name="page", defaultValue = "0") int page){
+    public String findAllPetFavoriteByUserAdoptador(Model model, Authentication auth){
         InfoToast info = new InfoToast();
         UserAdoptame user =  userAdoptameService.findUserByUsername(auth.getName());
 
