@@ -24,11 +24,11 @@ public class UserUpdateDto {
     private String username;
 
     @NotEmpty(message = "Debe de indicar un numero de usuario")
-    @Pattern(regexp = "[a-zA-Z0-9 ñáéíóúÁÉÍÓÚÑ]{3,30}", message = "Valor no aceptado")
+    @Pattern(regexp = "[0-9 ()-]{3,30}", message = "Valor no aceptado")
     private String phone;
 
     @NotEmpty(message = "Debe de indicar una dirección")
-    @Pattern(regexp = "[a-zA-Z0-9 ñáéíóúÁÉÍÓÚÑ]{3,750}", message = "Valor no aceptado")
+    @Pattern(regexp = "[a-zA-Z0-9 .#,ñáéíóúÁÉÍÓÚÑ]{3,750}", message = "Valor no aceptado")
     private String address;
 
     public Long getId() {

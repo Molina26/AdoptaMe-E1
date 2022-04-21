@@ -143,11 +143,13 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
 
         if(userDataRegistered.isPresent()){
             Optional<DetailUserinfo> detailsUserInfoRegistered =  detailUserInfoRepository.findDetailUserinfoByUser(userDataRegistered.get());
-            if(detailsUserInfoRegistered.isPresent()){
 
+            if(detailsUserInfoRegistered.isPresent()){
+                long idDetail = detailsUserInfoRegistered.get().getId();
                 try{
                     BeanUtils.copyProperties(userUpdateDto, userDataRegistered.get());
                     BeanUtils.copyProperties(userUpdateDto, detailsUserInfoRegistered.get());
+                    detailsUserInfoRegistered.get().setId(idDetail);
                     UserAdoptame userSuccess = userAdoptameRepository.save(userDataRegistered.get());
                     if(userSuccess.getId() != 0){
                         DetailUserinfo successDetails =  detailUserInfoRepository.save(detailsUserInfoRegistered.get());
