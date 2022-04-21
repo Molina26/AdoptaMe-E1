@@ -70,7 +70,7 @@ public class UserAdoptameController {
         infoMovement.setModuleName(MODULE_NAME);
 
         InfoToast info = new InfoToast();
-
+        userUpdateDto.setUsername(auth.getName());
         Map<String, List<String>> validation = userAdoptameService.getValidationToUpdateUser(userUpdateDto);
 
         if(!validation.isEmpty()){

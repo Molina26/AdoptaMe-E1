@@ -134,8 +134,19 @@ public class UserAdoptame {
         this.favoritesPets = favoritesPets;
     }
 
- 
-
-    
+    @Override
+    public String toString() {
+        return "UserAdoptame{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", firstLastname='" + firstLastname + '\'' +
+                ", secondLastname='" + secondLastname + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", createdAt=" + createdAt +
+                ", favoritesPets=" + favoritesPets +
+                '}';
+    }
 }
 

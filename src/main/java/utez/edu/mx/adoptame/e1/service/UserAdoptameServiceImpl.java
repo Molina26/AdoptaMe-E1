@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import utez.edu.mx.adoptame.e1.entity.DetailUserinfo;
+import utez.edu.mx.adoptame.e1.entity.MovementManagement;
 import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 import utez.edu.mx.adoptame.e1.entity.Role;
 import utez.edu.mx.adoptame.e1.model.request.blog.BlogUpdateDto;
@@ -15,6 +16,8 @@ import utez.edu.mx.adoptame.e1.model.request.user.UserUpdateDto;
 import utez.edu.mx.adoptame.e1.repository.DetailUserInfoRepository;
 import utez.edu.mx.adoptame.e1.repository.RolRepository;
 import utez.edu.mx.adoptame.e1.repository.UserAdoptameRepository;
+import utez.edu.mx.adoptame.e1.util.InfoMovement;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Validator;
@@ -28,17 +31,22 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
     private final UserAdoptameRepository userAdoptameRepository;
     private final RolRepository rolRepository;
     private final DetailUserInfoRepository detailUserInfoRepository;
+    private final InfoMovement infoMovement;
+    private final MovementManagementServiceImpl movementManagementService;
     private final PasswordEncoder passwordEncoder;
 
     public UserAdoptameServiceImpl(
             UserAdoptameRepository userAdoptameRepository, Validator validator, RolRepository rolRepository,
-            DetailUserInfoRepository detailUserInfoRepository,
+            DetailUserInfoRepository detailUserInfoRepository, InfoMovement infoMovement,
+            MovementManagementServiceImpl movementManagementService,
             PasswordEncoder passwordEncoder) {
         this.userAdoptameRepository = userAdoptameRepository;
         this.validator = validator;
         this.rolRepository = rolRepository;
-        this.passwordEncoder = passwordEncoder;
         this.detailUserInfoRepository = detailUserInfoRepository;
+        this.infoMovement = infoMovement;
+        this.movementManagementService = movementManagementService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -132,10 +140,33 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
     public boolean updateUser(UserUpdateDto userUpdateDto) {
         boolean validUpdate = false;
         Optional<UserAdoptame> userDataRegistered =  userAdoptameRepository.findById(userUpdateDto.getId());
+
         if(userDataRegistered.isPresent()){
             Optional<DetailUserinfo> detailsUserInfoRegistered =  detailUserInfoRepository.findDetailUserinfoByUser(userDataRegistered.get());
             if(detailsUserInfoRegistered.isPresent()){
-                    
+
+                try{
+                    BeanUtils.copyProperties(userUpdateDto, userDataRegistered.get());
+                    BeanUtils.copyProperties(userUpdateDto, detailsUserInfoRegistered.get());
+                    UserAdoptame userSuccess = userAdoptameRepository.save(userDataRegistered.get());
+                    if(userSuccess.getId() != 0){
+                        DetailUserinfo successDetails =  detailUserInfoRepository.save(detailsUserInfoRegistered.get());
+                        validUpdate = true;
+                        MovementManagement movement = new MovementManagement();
+
+                        movement.setModuleName(infoMovement.getModuleName());
+                        movement.setUsername(infoMovement.getUsername());
+                        movement.setAction(infoMovement.getActionMovement());
+                        movement.setMovementDate(new Date());
+                        movement.setPreviousData(userDataRegistered.get().toString() + "  "  + detailsUserInfoRegistered.get().toString());
+                        movement.setNewData(userSuccess.toString() +  "   " + successDetails.toString());
+                        movementManagementService.createOrUpdate(movement);
+                    }
+                }catch (Exception e){
+                    logger.error("error to update a user");
+                }
+
+
             }
         }
 

@@ -11,36 +11,71 @@
 </div>
 
     <div class="container">
+        <div th:insert="~{fragments/alert :: alerts}">
+        </div>
         <form th:action="@{/user/update}" th:object="${user}" method="post">
             <input type="hidden" th:field="*{id}">
             <div class="row">
                 <div class="col-12">
                     <h1>Perfill de usuario</h1>
                 </div>
-                    <div class="col-4">
+                    <div class="col-4 mt-2">
                         <label class="form-label">Nombre</label>
                         <input type="text" class="form-control"  th:field="*{name}" placeholder="Nombre"/>
+                        <div class="form-text text-danger" th:if="${errors != null && errors.get('name') != null}">
+                                    <span th:each="error: ${errors.get('name')}">
+                                        [[${error}]]
+                                        <br>
+                                    </span>
+                        </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4 mt-2">
                         <label class="form-label">Primer Apellido</label>
                         <input type="text" class="form-control"  th:field="*{firstLastname}"  placeholder="Primer Apellido"/>
+                        <div class="form-text text-danger" th:if="${errors != null && errors.get('firstLastname') != null}">
+                                    <span th:each="error: ${errors.get('firstLastname')}">
+                                        [[${error}]]
+                                        <br>
+                                    </span>
+                        </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4 mt-2">
                         <label class="form-label">Segundo Apellido</label>
                         <input type="text" class="form-control"  th:field="*{secondLastname}" placeholder="Segundo Apellido"/>
+                        <div class="form-text text-danger" th:if="${errors != null && errors.get('secondLastname') != null}">
+                                    <span th:each="error: ${errors.get('secondLastname')}">
+                                        [[${error}]]<br>
+                                    </span>
+                        </div>
                     </div>
 
-                <div class="col-12">
+                <div class="col-8 mt-2">
                     <label class="form-label">Username</label>
                     <input type="text" class="form-control" disabled th:field="*{username}" >
+                    <div class="form-text text-danger" th:if="${errors != null && errors.get('username') != null}">
+                                    <span th:each="error: ${errors.get('username')}">
+                                        [[${error}]]<br>
+                                    </span>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <label class="form-label">Dirección</label>
-                    <input type="text" class="form-control"  th:field="*{address}" placeholder="Dirección"/>
-                </div>
-                <div class="col-4">
+                <div class="col-4 mt-2">
                     <label class="form-label">Telefono</label>
                     <input type="text" class="form-control"  th:field="*{phone}" placeholder="Telefono"/>
+                    <div class="form-text text-danger" th:if="${errors != null && errors.get('phone') != null}">
+                                    <span th:each="error: ${errors.get('phone')}">
+                                        [[${error}]]<br>
+                                    </span>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-control"  th:field="*{address}" placeholder="Dirección"/>
+                    <div class="form-text text-danger" th:if="${errors != null && errors.get('address') != null}">
+                                    <span th:each="error: ${errors.get('address')}">
+                                        [[${error}]]<br>
+                                    </span>
+                    </div>
                 </div>
 
                 <div class="col-12 text-center mt-5">
