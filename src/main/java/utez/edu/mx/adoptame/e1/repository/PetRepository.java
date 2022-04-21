@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import utez.edu.mx.adoptame.e1.entity.Pet;
-import utez.edu.mx.adoptame.e1.entity.UserAdoptame;
 
 import java.util.List;
 

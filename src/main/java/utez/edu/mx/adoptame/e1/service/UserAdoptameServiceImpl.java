@@ -130,9 +130,16 @@ public class UserAdoptameServiceImpl implements UserAdoptameService {
 
     @Override
     public boolean updateUser(UserUpdateDto userUpdateDto) {
+        boolean validUpdate = false;
+        Optional<UserAdoptame> userDataRegistered =  userAdoptameRepository.findById(userUpdateDto.getId());
+        if(userDataRegistered.isPresent()){
+            Optional<DetailUserinfo> detailsUserInfoRegistered =  detailUserInfoRepository.findDetailUserinfoByUser(userDataRegistered.get());
+            if(detailsUserInfoRegistered.isPresent()){
+                    
+            }
+        }
 
-
-        return false;
+        return validUpdate;
     }
 
     public Map<String, List<String>> getValidationToUpdateUser(UserUpdateDto userUpdateDto) {

@@ -3,8 +3,6 @@ package utez.edu.mx.adoptame.e1.entity;
 import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.domain.Pageable;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
