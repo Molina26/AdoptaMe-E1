@@ -15,6 +15,10 @@
             <span class="fs-4">Buscar mascota</span>
         </div>
         <br>
+        <div class="input-group mb-3">
+            <i></i>
+            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="Buscar...">
+        </div>
         <hr>
         <form th:object="${search}" th:action="@{/pets/filter}">
             <input type="hidden" th:field="*{typePet}">
